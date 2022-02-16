@@ -1,0 +1,29 @@
+{
+  "name": "fcfs-api",
+  "version": "1.0.0",
+  "description": "Basic website and api for first come first serve",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production node server.js",
+    "dev": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chamoo334/fcfs-api.git"
+  },
+  "author": "chamoo334",
+  "license": "GNU GPL V3",
+  "bugs": {
+    "url": "https://github.com/chamoo334/fcfs-api/issues"
+  },
+  "homepage": "https://github.com/chamoo334/fcfs-api#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "morgan": "^1.10.0"
+  }
+}
