@@ -2,18 +2,33 @@ const apiv1 = require('./routes/apiv1');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const connectDB = require('./config/db');
 
-// load
+// load env & connect database
 dotenv.config({ path: './config/config.env' });
-const app = express();
+connectDB();
 
-// app.use(loggingMiddleware);
-// app.use(logger);
+const app = express();
+app.use(express.json());
+
+//dev logging middlewar
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use('/api/v1', apiv1);
-
 const PORT = process.env.PORT || 5000;
-app.listen(
+
+const server = app.listen(
   PORT,
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
+
+// @desc  Generic unhandled promise rejection handler.
+//        Close server and exit if unable to connect to db.
+process.on('unhandledRejection', (err, promise) => {
+  console.log(`Error: ${err.message}`);
+  server.close(() => {
+    process.exit(1);
+  });
+});

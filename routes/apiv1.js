@@ -4,8 +4,7 @@ const {
   getState,
   getPark,
   getCampground,
-  postPark,
-  postState,
+  postCampground,
   putCampground,
   putGood,
   putBad,
@@ -16,13 +15,13 @@ const router = express.Router();
 
 router.route('/campgrounds').get(getCampgrounds);
 router
-  .route('/:state/:parkID/:campgroundID')
+  .route('/:state/:park/:campground')
   .get(getCampground)
   .put(putCampground)
   .delete(delCampground);
-router.route('/:state/:parkID/:campgroundID/good').put(putGood);
-router.route('/:state/:parkID/:campgroundID/bad').put(putBad);
-router.route('/:state/:parkID').get(getPark).post(postPark).delete(delPark);
-router.route('/:state').get(getState).post(postState);
+router.route('/:state/:park/:campground/good').put(putGood);
+router.route('/:state/:park/:campground/bad').put(putBad);
+router.route('/:state/:park').get(getPark).delete(delPark);
+router.route('/:state').get(getState).post(postCampground);
 
 module.exports = router;
