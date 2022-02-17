@@ -18,27 +18,6 @@ const ParkSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Server unable to locate state id. Try again later.'],
   },
-  address: {
-    type: String,
-    required: [true, 'Please add an address'],
-  },
-  //   location: {
-  //     // GeoJSON Point
-  //     type: {
-  //       type: String,
-  //       enum: ['Point'],
-  //     },
-  //     coordinates: {
-  //       type: [Number],
-  //       index: '2dsphere',
-  //     },
-  //     formattedAddress: String,
-  //     street: String,
-  //     city: String,
-  //     state: String,
-  //     zipcode: String,
-  //     country: String,
-  //   },
 });
 
 module.exports = mongoose.model('Park', ParkSchema);

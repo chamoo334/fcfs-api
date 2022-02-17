@@ -1,4 +1,7 @@
+const geocoder = require('../utils/geocoder');
 const mongoose = require('mongoose');
+const slugify = require('slugify');
+
 const CampgroundSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -7,6 +10,7 @@ const CampgroundSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, "Campground's name cannot be longer than 50 characters"],
   },
+  slug: String,
   park: {
     type: String,
     required: [true, 'Please include a park name.'],
@@ -24,6 +28,24 @@ const CampgroundSchema = new mongoose.Schema({
   },
   stateID: {
     type: String,
+  },
+  address: {
+    type: String,
+    required: [
+      true,
+      'An address is required if new campground is associated with a new park',
+    ],
+  },
+  location: {
+    // GeoJSON Point
+    type: {
+      type: String,
+      enum: ['Point'],
+    },
+    coordinates: {
+      type: [Number],
+      index: '2dsphere',
+    },
   },
   slug: String,
   fee: {
@@ -62,6 +84,28 @@ const CampgroundSchema = new mongoose.Schema({
     type: String,
     default: 'no-photo.jpg',
   },
+});
+
+//create campground slug from name
+CampgroundSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  this.park = slugify(this.park, { lower: true });
+  next();
+});
+
+// Geocode & create location field
+CampgroundSchema.pre('save', async function (next) {
+  const loc = await geocoder.geocode(this.address);
+  this.location = {
+    type: 'Point',
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+  };
+
+  // Prevent address from saving twice
+  this.address = undefined;
+
+  next();
 });
 
 module.exports = mongoose.model('Campground', CampgroundSchema);

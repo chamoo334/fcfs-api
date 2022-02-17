@@ -1,0 +1,38 @@
+const ErrorResponse = require('../utils/ErrorResponse');
+
+const errorHandler = (err, req, res, next) => {
+  let error = { ...err };
+  error.message = err.message;
+
+  //dev log
+  if (process.env.NODE_ENV === 'development') {
+    console.log(err.name, err.value);
+    // console.log(err.stack);
+    console.log(error);
+  }
+
+  // Bad ObjectID for Mongoose
+  if (err.name === 'CastError') {
+    const message = `Campground id ${err.value} formatted incorrectly`;
+    error = new ErrorResponse(message, 404);
+  }
+
+  // duplicate name
+  if (err.code === 11000) {
+    const message = `Provided name ${error.keyValue.name} already exists.`;
+    error = new ErrorResponse(message, 400);
+  }
+
+  // validation error
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors).map(val => val.message);
+    error = new ErrorResponse(message, 400);
+  }
+
+  res.status(error.statusCode || 500).json({
+    success: false,
+    error: error.message || 'Server error',
+  });
+};
+
+module.exports = errorHandler;

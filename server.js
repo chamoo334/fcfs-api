@@ -1,8 +1,9 @@
 const apiv1 = require('./routes/apiv1');
+const connectDB = require('./config/db');
+const errHandler = require('./middleware/error');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-const connectDB = require('./config/db');
 
 // load env & connect database
 dotenv.config({ path: './config/config.env' });
@@ -17,6 +18,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/v1', apiv1);
+app.use(errHandler);
+
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(
