@@ -27,7 +27,6 @@
     "mongoose": "^6.2.2",
     "morgan": "^1.10.0",
     "node-geocoder": "^4.0.0",
-    "slugify": "^1.6.5",
-    "unslugify": "^1.0.2"
+    "slugify": "^1.6.5"
   }
 }

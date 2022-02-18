@@ -4,7 +4,6 @@ const geocder = require('../utils/geocoder');
 const Campground = require('../models/Campground');
 const Park = require('../models/Park');
 const State = require('../models/State');
-const unslugify = require('unslugify');
 const slugify = require('slugify');
 const geocoder = require('../utils/geocoder');
 // import { unslugify } from 'unslugify';
@@ -13,6 +12,11 @@ const geocoder = require('../utils/geocoder');
 // @route   GET /api/v1/campgrounds
 // @access  Public
 exports.getCampgrounds = asyncHandler(async (req, res, next) => {
+  // select=name, park, state, location,fee,toilet,water,yearRound,goodVotes,badVotes, lastUpdate
+  // const campgrounds = await Campground.find(
+  //   {},
+  //   'name park state location fee toilet water yearRound goodVotes badVotes lastUpdate'
+  // );
   const campgrounds = await Campground.find();
   res.status(200).json({
     sucess: true,
@@ -25,6 +29,7 @@ exports.getCampgrounds = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/campgrounds/:zipcode/:distance
 // @access  Public
 exports.getCampsRadius = asyncHandler(async (req, res, next) => {
+  // select=name, park, state, location,fee,toilet,water,yearRound,goodVotes,badVotes, lastUpdate
   const { zipcode, distance } = req.params;
 
   //obtain geocoder data
@@ -50,6 +55,7 @@ exports.getCampsRadius = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state
 //@access   Public
 exports.getState = asyncHandler(async (req, res, next) => {
+  // select=name, park, location,fee,toilet,water,yearRound,goodVotes,badVotes, lastUpdate
   const loc = req.params.state.toUpperCase();
   const state = await State.find({ identifier: loc });
 
@@ -73,6 +79,7 @@ exports.getState = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state/:park
 //@access   Public
 exports.getPark = asyncHandler(async (req, res, next) => {
+  // select=name, location,fee,toilet,water,yearRound,goodVotes,badVotes, lastUpdate
   const loc = req.params.state.toUpperCase();
   const state = await State.find({ identifier: loc });
 
@@ -108,6 +115,7 @@ exports.getPark = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state/:park/:campground
 //@access   Public
 exports.getCampground = asyncHandler(async (req, res, next) => {
+  // select=name, park, state, location,fee,toilet,water,yearRound,goodVotes,badVotes, lastUpdate
   const loc = req.params.state.toUpperCase();
   const state = await State.find({ identifier: loc });
 
