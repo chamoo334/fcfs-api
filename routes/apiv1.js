@@ -1,6 +1,7 @@
 const express = require('express');
 const {
   getCampgrounds,
+  getCampsRadius,
   getState,
   getPark,
   getCampground,
@@ -14,6 +15,7 @@ const {
 const router = express.Router();
 
 router.route('/campgrounds').get(getCampgrounds);
+router.route('/campgrounds/:zipcode/:distance').get(getCampsRadius);
 router
   .route('/:state/:park/:campground')
   .get(getCampground)

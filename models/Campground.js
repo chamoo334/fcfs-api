@@ -1,4 +1,5 @@
 const geocoder = require('../utils/geocoder');
+const Park = require('./Park');
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 
@@ -6,15 +7,17 @@ const CampgroundSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please add a name'],
-    unique: true, //TODO: use middleware to ensure name is unique to park
     trim: true,
     maxlength: [50, "Campground's name cannot be longer than 50 characters"],
+    validate: [
+      campParkValidator,
+      'Campground already exists in provided park.',
+    ],
   },
   slug: String,
   park: {
     type: String,
     required: [true, 'Please include a park name.'],
-    maxlength: [50, "Park's name cannot be longer than 50 characters"],
   },
   parkID: {
     type: String,
@@ -45,6 +48,9 @@ const CampgroundSchema = new mongoose.Schema({
     coordinates: {
       type: [Number],
       index: '2dsphere',
+    },
+    formattedAddress: {
+      type: String,
     },
   },
   slug: String,
@@ -86,16 +92,31 @@ const CampgroundSchema = new mongoose.Schema({
   },
 });
 
+//TEST: verify asyncHandler is not needed or use try and catch
+async function campParkValidator(value) {
+  const campgrounds = await mongoose.models.Campground.find({
+    stateID: this.stateID,
+    park: this.park,
+    name: value,
+  });
+
+  if (campgrounds.length > 0) {
+    return false;
+  }
+
+  return true;
+}
+
 //create campground slug from name
 CampgroundSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
-  this.park = slugify(this.park, { lower: true });
   next();
 });
 
 // Geocode & create location field
 CampgroundSchema.pre('save', async function (next) {
   const loc = await geocoder.geocode(this.address);
+
   this.location = {
     type: 'Point',
     coordinates: [loc[0].longitude, loc[0].latitude],
