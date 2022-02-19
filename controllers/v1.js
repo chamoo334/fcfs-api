@@ -49,12 +49,16 @@ exports.getCampsRadius = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state
 //@access   Public
 exports.getState = asyncHandler(async (req, res, next) => {
-  const loc = req.params.state.toUpperCase();
-  const state = await State.find({ identifier: loc });
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
 
   if (state.length < 1) {
     return next(
-      new ErrorResponse(`State with identifier of ${loc} not found`, 404)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 
@@ -62,7 +66,7 @@ exports.getState = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     sucess: true,
-    state: loc,
+    state: req.params.state,
     count: campgrounds.length,
     data: campgrounds,
   });
@@ -72,12 +76,16 @@ exports.getState = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state/:park
 //@access   Public
 exports.getPark = asyncHandler(async (req, res, next) => {
-  const loc = req.params.state.toUpperCase();
-  const state = await State.find({ identifier: loc });
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
 
   if (state.length < 1) {
     return next(
-      new ErrorResponse(`State with identifier of ${loc} not found`, 404)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 
@@ -96,7 +104,7 @@ exports.getPark = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     sucess: true,
-    state: loc,
+    state: req.params.state,
     park: req.params.park, //TODO: unslugify
     count: campgrounds.length,
     data: campgrounds,
@@ -107,12 +115,16 @@ exports.getPark = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state/:park/:campground
 //@access   Public
 exports.getCampground = asyncHandler(async (req, res, next) => {
-  const loc = req.params.state.toUpperCase();
-  const state = await State.find({ identifier: loc });
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
 
   if (state.length < 1) {
     return next(
-      new ErrorResponse(`State with identifier of ${loc} not found`, 404)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 
@@ -132,7 +144,7 @@ exports.getCampground = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     sucess: true,
-    state: loc,
+    state: req.params.state,
     park: req.params.park, //TODO: unslugify
     count: campgrounds.length,
     data: campgrounds,
@@ -221,12 +233,16 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground
 //@access   Private (logged in or token)
 exports.putCampground = asyncHandler(async (req, res, next) => {
-  const loc = req.params.state.toUpperCase();
-  const state = await State.find({ identifier: loc });
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
 
   if (state.length < 1) {
     return next(
-      new ErrorResponse(`State with identifier of ${loc} not found`, 404)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 
@@ -254,12 +270,16 @@ exports.putCampground = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground/good
 //@access   PUBLIC
 exports.putGood = asyncHandler(async (req, res, next) => {
-  const loc = req.params.state.toUpperCase();
-  const state = await State.find({ identifier: loc });
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
 
   if (state.length < 1) {
     return next(
-      new ErrorResponse(`State with identifier of ${loc} not found`, 404)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 
@@ -287,12 +307,16 @@ exports.putGood = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground/bad
 //@access   PUBLIC
 exports.putBad = asyncHandler(async (req, res, next) => {
-  const loc = req.params.state.toUpperCase();
-  const state = await State.find({ identifier: loc });
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
 
   if (state.length < 1) {
     return next(
-      new ErrorResponse(`State with identifier of ${loc} not found`, 404)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 
@@ -320,12 +344,16 @@ exports.putBad = asyncHandler(async (req, res, next) => {
 //@route    DELETE /api/v1/:state/:park
 //@access   Private (moderators only)
 exports.delPark = asyncHandler(async (req, res, next) => {
-  const loc = req.params.state.toUpperCase();
-  const state = await State.find({ identifier: loc });
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
 
   if (state.length < 1) {
     return next(
-      new ErrorResponse(`State with identifier of ${loc} not found`, 404)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 
@@ -340,7 +368,6 @@ exports.delPark = asyncHandler(async (req, res, next) => {
       .json({ success: false, error: 'Server not able to find park' });
   }
 
-  console.log(park);
   park.remove();
 
   res.sendStatus(204);
@@ -352,12 +379,16 @@ exports.delPark = asyncHandler(async (req, res, next) => {
 //@route    DELETE /api/v1/:state/:park/:campground
 //@access   Private (moderators only)
 exports.delCampground = asyncHandler(async (req, res, next) => {
-  const loc = req.params.state.toUpperCase();
-  const state = await State.find({ identifier: loc });
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
 
   if (state.length < 1) {
     return next(
-      new ErrorResponse(`State with identifier of ${loc} not found`, 404)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 

@@ -6,12 +6,16 @@
 
 - [ ] basic route configurations for:
   - [x] GET /v1/campgrounds
-  - [x] GET /v1/campgrounds/:state
-  - [x] GET /v1/campgrounds/:state/:parkid
-  - [x] GET /v1/radius#
-  - [x] POST /v1/:id/submit/:park/:campground
-  - [ ] PUT /v1/:id/:park/:campground
-  - [ ] DELETE /v1/:id/:park/:campground
+  - [x] GET /v1//campgrounds/:zipcode/:distance'
+  - [x] GET /v1//:state
+  - [x] GET /v1/:state/:park
+  - [x] GET /v1/:state/:park/:campground
+  - [x] POST /v1/:state
+  - [x] PUT /v1/:state/:park/:campground
+  - [x] PUT /v1/:state/:park/:campground/good
+  - [x] PUT /v1/:state/:park/:campground/bad
+  - [x] DELETE /v1/:state/:park
+  - [x] DELETE /v1/:state/:park/:campground
 - [ ] Database interactions
   - [ ] List all campgrounds GET /v1/campgrounds
   - [ ] List all campgrounds by state GET /v1/campgrounds

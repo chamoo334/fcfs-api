@@ -66,7 +66,6 @@ ParkSchema.pre('save', async function (next) {
 
 // Cascade delete campgrounds when a park is deleted
 ParkSchema.pre('remove', async function (next) {
-  console.log(`Campgrounds being removed from ${this.id}`);
   await this.model('Campground').deleteMany({ parkID: this.id });
   next();
 });
