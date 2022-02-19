@@ -5,11 +5,6 @@
 ### - [ ] Backend / Server
 
 - [ ] Database interactions
-  - [x] List all campgrounds
-  - [x] List all campgrounds by state
-  - [x] Search by radious from zipcode using geocoder to get exact locations
-  - [x] List campgrounds by park in a state
-  - [x] Fetch specific campground
   - [ ] Submit a new campsite
     - [ ] authenticated users only
     - [x] field validation via API
@@ -72,6 +67,26 @@
 
 ## In Progress
 
+### - [ ] Backend / Server
+
+- [ ] Users & Authentication
+  - [ ] Authentication via cookies (look at other alternatives)
+  - [ ] Registration
+    - [ ] Once registered a token with cookie will be sent
+    - [ ] Passwords must be hashed
+- [ ] Database interactions
+  - [ ] Submit a new campsite
+    - [ ] authenticated users only
+    - [x] field validation via API
+  - [ ] Update a campsite PUT
+    - [ ] authenticated users only
+    - [x] field validation via API
+  - [ ] Delete a campsite
+    - [ ] admin only
+  - [ ] Delete a Park
+    - [ ] admin only
+    - [x] delete associated campgrounds
+
 ## Done ✓
 
 ### - [ ] Backend / Server
@@ -88,3 +103,9 @@
   - [x] PUT /v1/:state/:park/:campground/bad
   - [x] DELETE /v1/:state/:park
   - [x] DELETE /v1/:state/:park/:campground
+- [ ] Database interactions
+  - [x] List all campgrounds
+  - [x] List all campgrounds by state
+  - [x] Search by radious from zipcode using geocoder to get exact locations
+  - [x] List campgrounds by park in a state
+  - [x] Fetch specific campground
