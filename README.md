@@ -5,11 +5,11 @@
 ### - [ ] Backend / Server
 
 - [ ] basic route configurations for:
-  - [ ] GET /v1/campgrounds
-  - [ ] GET /v1/campgrounds/:state
-  - [ ] GET /v1/campgrounds/:state/:parkid
-  - [ ] GET /v1/radius#
-  - [ ] POST /v1/:id/submit/:park/:campground
+  - [x] GET /v1/campgrounds
+  - [x] GET /v1/campgrounds/:state
+  - [x] GET /v1/campgrounds/:state/:parkid
+  - [x] GET /v1/radius#
+  - [x] POST /v1/:id/submit/:park/:campground
   - [ ] PUT /v1/:id/:park/:campground
   - [ ] DELETE /v1/:id/:park/:campground
 - [ ] Database interactions
