@@ -53,6 +53,8 @@
   - [ ] Dropdown Navbar
   - [ ] View by state clickable image
   - [ ] find within your current radius
+- [ ] User Page
+  - [ ] Add campground
 - [ ] State Page
   - [ ] list all parks
   - [ ] click to view all parks
@@ -62,7 +64,9 @@
   - [ ] click to view all campgrounds
   - [ ] click to go to specific campground
 - [ ] Campground Page
-  - [ ] display campgroundi information
+  - [ ] display campground information
+  - [ ] vote on campground
+    - [ ] authenticated users can update
 - [ ] API Documentation Page
 
 ## In Progress
@@ -109,3 +113,4 @@
   - [x] Search by radious from zipcode using geocoder to get exact locations
   - [x] List campgrounds by park in a state
   - [x] Fetch specific campground
+  - [x] Pagination

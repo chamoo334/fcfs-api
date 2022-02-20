@@ -7,7 +7,7 @@ dotenv.config({ path: './config/config.env' });
 const options = {
   provider: process.env.GEOCODER_PROVIDER,
   httpadapter: 'https',
-  apiKey: process.env.MAPQUEST_API_KEY,
+  apiKey: process.env.GEO_PROVIDER_API_KEY,
   formatter: null,
 };
 

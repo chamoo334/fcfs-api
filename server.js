@@ -4,6 +4,8 @@ const errHandler = require('./middleware/error');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const fileupload = require('express-fileupload');
+const path = require('path');
 
 // load env & connect database
 dotenv.config({ path: './config/config.env' });
@@ -17,6 +19,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use(fileupload());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1', apiv1);
 app.use(errHandler);
 

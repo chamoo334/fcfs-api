@@ -3,15 +3,6 @@ const ErrorResponse = require('../utils/ErrorResponse');
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 
-// {
-//   toJSON: {
-//      transform: function(doc, ret) {
-//        ret.id = ret._id;
-//        delete ret._id;
-//      }
-//    }
-// }
-
 const CampgroundSchema = new mongoose.Schema(
   {
     name: {
@@ -92,6 +83,7 @@ const CampgroundSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
     lastUpdate: {
       type: Date,
       default: Date.now,
@@ -114,6 +106,12 @@ const CampgroundSchema = new mongoose.Schema(
         const lat = ret.location.coordinates[1];
         const lon = ret.location.coordinates[0];
         ret.location.coordinates = [lat, lon];
+        ret.votes = {
+          total: ret.goodVotes + ret.badVotes,
+          percentPos: (ret.goodVotes / (ret.goodVotes + ret.badVotes)) * 100,
+        };
+        delete ret.goodVotes;
+        delete ret.badVotes;
       },
     },
   }
