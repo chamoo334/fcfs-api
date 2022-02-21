@@ -78,19 +78,17 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
   if (!req.body.park) {
     return next(new ErrorResponse(`Please include a park name`, 400));
   }
+
   let createdPark = false;
   const parkSlug = slugify(req.body.park, { lower: true });
 
-  // obtain state data
-  const state = await genDs.findState(req.params.state.toUpperCase(), res);
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
   //find park or create park (requires an address)
-  let park = await genDs.findPark(parkSlug, res, state[0].id, true);
+  const park = await genDs.findPark(
+    parkSlug,
+    res,
+    req.params.state.toUpperCase(),
+    true
+  );
 
   if (park.length === 0) {
     if (!req.body.address) {
@@ -99,6 +97,14 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
           `Please include an address of either the campground or the park`,
           404
         )
+      );
+    }
+
+    // obtain state data
+    const state = await genDs.findState(req.params.state.toUpperCase(), res);
+    if (res.resultsError) {
+      return next(
+        new ErrorResponse(res.resultsError.msg, res.resultsError.status)
       );
     }
 
@@ -113,12 +119,12 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
     createdPark = true;
   }
 
-  req.body.stateID = state[0].id;
-
   if (createdPark) {
     req.body.parkID = park.id;
+    req.body.stateID = park.stateID;
   } else {
     req.body.parkID = park[0].id;
+    req.body.stateID = park[0].stateID;
     if (!req.body.address) {
       req.body.address = park[0].location.formattedAddress;
     }
@@ -144,15 +150,12 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground
 //@access   Private (logged in or token)
 exports.putCampground = asyncHandler(async (req, res, next) => {
-  // find state and park
-  const state = await genDs.findState(req.params.state.toUpperCase(), res);
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
-  let park = await genDs.findPark(req.params.park, res, state[0].id, false);
+  const park = await genDs.findPark(
+    req.params.park,
+    res,
+    req.params.state.toUpperCase(),
+    false
+  );
   if (res.resultsError) {
     return next(
       new ErrorResponse(res.resultsError.msg, res.resultsError.status)
@@ -160,7 +163,11 @@ exports.putCampground = asyncHandler(async (req, res, next) => {
   }
 
   const campground = await Campground.findOneAndUpdate(
-    { slug: req.params.campground, parkID: park[0].id, stateID: state[0].id },
+    {
+      slug: req.params.campground,
+      parkID: park[0].id,
+      stateID: park[0].stateID,
+    },
     req.body,
     { new: true, runValidators: true }
   );
@@ -175,15 +182,12 @@ exports.putCampground = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground/good
 //@access   PUBLIC
 exports.putGood = asyncHandler(async (req, res, next) => {
-  // find state and park
-  const state = await genDs.findState(req.params.state.toUpperCase(), res);
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
-  let park = await genDs.findPark(req.params.park, res, state[0].id, false);
+  const park = await genDs.findPark(
+    req.params.park,
+    res,
+    req.params.state.toUpperCase(),
+    false
+  );
   if (res.resultsError) {
     return next(
       new ErrorResponse(res.resultsError.msg, res.resultsError.status)
@@ -191,7 +195,11 @@ exports.putGood = asyncHandler(async (req, res, next) => {
   }
 
   const campground = await Campground.findOneAndUpdate(
-    { slug: req.params.campground, parkID: park[0].id, stateID: state[0].id },
+    {
+      slug: req.params.campground,
+      parkID: park[0].id,
+      stateID: park[0].stateID,
+    },
     { $inc: { goodVotes: 1 } },
     { new: true, runValidators: true }
   );
@@ -206,15 +214,12 @@ exports.putGood = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground/bad
 //@access   PUBLIC
 exports.putBad = asyncHandler(async (req, res, next) => {
-  // find state and park
-  const state = await genDs.findState(req.params.state.toUpperCase(), res);
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
-  let park = await genDs.findPark(req.params.park, res, state[0].id, false);
+  const park = await genDs.findPark(
+    req.params.park,
+    res,
+    req.params.state.toUpperCase(),
+    false
+  );
   if (res.resultsError) {
     return next(
       new ErrorResponse(res.resultsError.msg, res.resultsError.status)
@@ -222,7 +227,11 @@ exports.putBad = asyncHandler(async (req, res, next) => {
   }
 
   const campground = await Campground.findOneAndUpdate(
-    { slug: req.params.campground, parkID: park[0].id, stateID: state[0].id },
+    {
+      slug: req.params.campground,
+      parkID: park[0].id,
+      stateID: park[0].stateID,
+    },
     { $inc: { badVotes: 1 } },
     { new: true, runValidators: true }
   );
@@ -248,15 +257,12 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // find state and park
-  const state = await genDs.findState(req.params.state.toUpperCase(), res);
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
-  let park = await genDs.findPark(req.params.park, res, state[0].id, false);
+  const park = await genDs.findPark(
+    req.params.park,
+    res,
+    req.params.state.toUpperCase(),
+    false
+  );
   if (res.resultsError) {
     return next(
       new ErrorResponse(res.resultsError.msg, res.resultsError.status)
@@ -266,8 +272,10 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
   const campground = await Campground.findOne({
     slug: req.params.campground,
     parkID: park[0].id,
-    stateID: state[0].id,
+    stateID: park[0].stateID,
   });
+
+  console.log(campground);
 
   if (!campground) {
     return res
@@ -276,9 +284,7 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
   }
 
   const file = req.files.file;
-  file.name = `photo_${req.params.state}_${req.params.park}_${
-    req.params.campground
-  }_${path.parse(file.name).ext}`;
+  file.name = `photo_${campground.id}_${path.parse(file.name).ext}`;
 
   // TODO: remove old image before adding new
 
@@ -304,11 +310,16 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
 //@route    DELETE /api/v1/:state/:park
 //@access   Private (moderators only)
 exports.delPark = asyncHandler(async (req, res, next) => {
-  // find state and park
-  const state = await genDs.findState(req.params.state.toUpperCase(), res);
-  if (res.resultsError) {
+  const state = await State.find({
+    identifier: req.params.state.toUpperCase(),
+  });
+
+  if (state.length < 1) {
     return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
+      new ErrorResponse(
+        `State with identifier of ${req.params.state} not found`,
+        404
+      )
     );
   }
 
@@ -332,15 +343,12 @@ exports.delPark = asyncHandler(async (req, res, next) => {
 //@route    DELETE /api/v1/:state/:park/:campground
 //@access   Private (moderators only)
 exports.delCampground = asyncHandler(async (req, res, next) => {
-  // find state and park
-  const state = await genDs.findState(req.params.state.toUpperCase(), res);
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
-  let park = await genDs.findPark(req.params.park, res, state[0].id, false);
+  const park = await genDs.findPark(
+    req.params.park,
+    res,
+    req.params.state.toUpperCase(),
+    false
+  );
   if (res.resultsError) {
     return next(
       new ErrorResponse(res.resultsError.msg, res.resultsError.status)
@@ -350,7 +358,7 @@ exports.delCampground = asyncHandler(async (req, res, next) => {
   const campground = await Campground.findOneAndDelete({
     slug: req.params.campground,
     parkID: park[0].id,
-    stateID: state[0].id,
+    stateID: park[0].stateID,
   });
 
   if (!campground) {

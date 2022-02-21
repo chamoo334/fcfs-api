@@ -19,25 +19,25 @@ exports.findState = async (state, res) => {
   return found;
 };
 
-exports.findPark = async (park, res, stateID = null, emptyPerm = false) => {
+exports.findPark = async (park, res, reqState = null, emptyPerm = false) => {
   const find = { slug: park };
 
-  if (stateID) {
-    find.stateID = stateID;
+  if (reqState) {
+    const state = await this.findState(reqState, res);
+
+    if (res.resultsError) {
+      return;
+    }
+    find.stateID = state[0].id;
   }
 
   const found = await Park.find(find);
 
   if (found.length < 1 && !emptyPerm) {
-    console.log('here2');
-    if (!res.resultsError) {
-      res.resultsError = {
-        msg: `${park} park not found`,
-        status: 404,
-      };
-    } else {
-      res.resultsError.msg += `${park} park not found`;
-    }
+    res.resultsError = {
+      msg: `Requested park not found.`,
+      status: 404,
+    };
     return;
   }
 
@@ -45,6 +45,7 @@ exports.findPark = async (park, res, stateID = null, emptyPerm = false) => {
 };
 
 exports.advanceCampQuery = async (
+  method,
   req,
   res,
   need = null,
@@ -60,7 +61,20 @@ exports.advanceCampQuery = async (
   const find = need || {};
   const sort = order || {};
 
-  if (req.params.state) {
+  if (req.params.park) {
+    const park = await this.findPark(
+      req.params.park,
+      res,
+      req.params.state.toUpperCase()
+    );
+
+    if (res.resultsError) {
+      return;
+    }
+
+    find.parkID = park[0].id;
+    find.stateID = park[0].stateID;
+  } else if (req.params.state) {
     const state = await this.findState(req.params.state.toUpperCase(), res);
 
     if (res.resultsError) {
@@ -68,16 +82,6 @@ exports.advanceCampQuery = async (
     }
 
     find.stateID = state[0].id;
-  }
-
-  if (req.params.park) {
-    const park = await this.findPark(req.params.park, res, find.stateID);
-
-    if (res.resultsError) {
-      return;
-    }
-
-    find.parkID = park[0].id;
   }
 
   if (req.params.campground) {
