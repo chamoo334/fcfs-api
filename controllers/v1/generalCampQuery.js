@@ -45,7 +45,6 @@ exports.findPark = async (park, res, reqState = null, emptyPerm = false) => {
 };
 
 exports.advanceCampQuery = async (
-  method,
   req,
   res,
   need = null,

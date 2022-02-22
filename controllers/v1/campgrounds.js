@@ -1,12 +1,12 @@
 const ErrorResponse = require('../../utils/ErrorResponse');
-const geocoder = require('../../utils/geocoder');
-const genDs = require('./generalQuery');
+// const geocoder = require('../../utils/geocoder');
+const genDs = require('./generalCampQuery');
 const asyncHandler = require('../../middleware/async');
 const Campground = require('../../models/Campground');
 const Park = require('../../models/Park');
 const State = require('../../models/State');
 const slugify = require('slugify');
-const { query } = require('express');
+// const { query } = require('express');
 const path = require('path');
 
 // @desc    Get all campgrounds
@@ -73,7 +73,7 @@ exports.getCampground = asyncHandler(async (req, res, next) => {
 
 //@desc     Create a new campground and/or park
 //@route    POST /api/v1/:state
-//@access   Private (logged in or token)
+//@access   Users
 exports.postCampground = asyncHandler(async (req, res, next) => {
   if (!req.body.park) {
     return next(new ErrorResponse(`Please include a park name`, 400));
@@ -83,7 +83,7 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
   const parkSlug = slugify(req.body.park, { lower: true });
 
   //find park or create park (requires an address)
-  const park = await genDs.findPark(
+  let park = await genDs.findPark(
     parkSlug,
     res,
     req.params.state.toUpperCase(),
@@ -107,8 +107,7 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
         new ErrorResponse(res.resultsError.msg, res.resultsError.status)
       );
     }
-
-    const parkData = {
+    let parkData = {
       name: req.body.park,
       slug: parkSlug,
       state: undefined,
@@ -148,7 +147,7 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
 
 //@desc     Update data of a spceific campground
 //@route    PUT /api/v1/:state/:park/:campground
-//@access   Private (logged in or token)
+//@access   Private Users
 exports.putCampground = asyncHandler(async (req, res, next) => {
   const park = await genDs.findPark(
     req.params.park,
@@ -244,7 +243,7 @@ exports.putBad = asyncHandler(async (req, res, next) => {
 
 //@desc     Upload an image for a specific campground
 //@route    PUT /api/v1/:state/:park/:campground/photo
-//@access   Private (logged in or token)
+//@access   Private Users
 exports.putPhoto = asyncHandler(async (req, res, next) => {
   if (!req.files || !req.files.file.mimetype.startsWith('image')) {
     return next(new ErrorResponse('Please upload an image file.', 400));
@@ -308,7 +307,7 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
 
 //@desc     Delete a specific park and its campgrounds
 //@route    DELETE /api/v1/:state/:park
-//@access   Private (moderators only)
+//@access   Private Admin
 exports.delPark = asyncHandler(async (req, res, next) => {
   const state = await State.find({
     identifier: req.params.state.toUpperCase(),
@@ -341,7 +340,7 @@ exports.delPark = asyncHandler(async (req, res, next) => {
 
 //@desc     Delete a specific campground
 //@route    DELETE /api/v1/:state/:park/:campground
-//@access   Private (moderators only)
+//@access   Private Admin
 exports.delCampground = asyncHandler(async (req, res, next) => {
   const park = await genDs.findPark(
     req.params.park,

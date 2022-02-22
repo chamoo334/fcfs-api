@@ -29,6 +29,16 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(message, 400);
   }
 
+  if (err.name === 'JsonWebTokenError') {
+    const message = `Not authorized to access this route`;
+    error = new ErrorResponse(message, 401);
+  }
+
+  if (err.name === 'TokenExpiredError') {
+    const message = `Please log in again`;
+    error = new ErrorResponse(message, 401);
+  }
+
   res.status(error.statusCode || 500).json({
     success: false,
     error: error.message || 'Server error',
