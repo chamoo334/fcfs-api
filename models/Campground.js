@@ -88,6 +88,10 @@ const CampgroundSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    lastModifiedBy: {
+      type: String,
+      // required: true, TODO: create pre check to require lastModifiedBy for everything but voting
+    },
     photo: {
       type: String,
       default: 'no-photo.jpg',

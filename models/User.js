@@ -3,44 +3,60 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { eventNames } = require('./Campground');
+const crypto = require('crypto');
 
-const UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please add a name'],
-    unique: true,
+const UserSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Please add a name'],
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: [true, 'Please add an email'],
+      unique: true,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        'Please add a valid email address',
+      ],
+    },
+    role: {
+      type: String,
+      enum: ['user', 'contributor', 'admin'],
+      default: 'user',
+    },
+    password: {
+      type: String,
+      required: [true, 'Please add a password'],
+      minlength: 7,
+      select: false,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  email: {
-    type: String,
-    required: [true, 'Please add an email'],
-    unique: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please add a valid email address',
-    ],
-  },
-  role: {
-    type: String,
-    enum: ['user', 'contributor', 'admin'],
-    default: 'user',
-  },
-  password: {
-    type: String,
-    required: [true, 'Please add a password'],
-    minlength: 7,
-    select: false,
-  },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret._id;
+        delete ret.__v;
+        // delete ret.password;
+        // delete ret.resetPasswordToken;
+        // delete ret.resetPasswordExpire;
+      },
+    },
+  }
+);
 
 //encrypt password using bcrypt
 UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    next();
+  }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
@@ -56,6 +72,20 @@ UserSchema.methods.getSignedJwtToken = function () {
 // match password using bcrypt
 UserSchema.methods.matchPassword = async function (reqPassword) {
   return await bcrypt.compare(reqPassword, this.password);
+};
+
+// Generate and hash password token
+UserSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(20).toString('hex');
+
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000; //15 min
+
+  return resetToken;
 };
 
 module.exports = mongoose.model('User', UserSchema);

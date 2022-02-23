@@ -1,6 +1,7 @@
 const Campground = require('../../models/Campground');
 const Park = require('../../models/Park');
 const State = require('../../models/State');
+const User = require('../../models/User');
 const geocoder = require('../../utils/geocoder');
 
 exports.findState = async (state, res) => {
@@ -44,7 +45,8 @@ exports.findPark = async (park, res, reqState = null, emptyPerm = false) => {
   return found;
 };
 
-exports.advanceCampQuery = async (
+exports.advanceQuery = async (
+  model,
   req,
   res,
   need = null,
@@ -56,7 +58,7 @@ exports.advanceCampQuery = async (
   const limit = parseInt(req.query.limit, 10) || 0;
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
-  const total = (await Campground.find()).length;
+  const total = (await model.find()).length;
   const find = need || {};
   const sort = order || {};
 
@@ -103,7 +105,7 @@ exports.advanceCampQuery = async (
     };
   }
 
-  let query = Campground.find(find);
+  let query = model.find(find);
   query.skip(startIndex).limit(limit).sort(sort);
 
   if (populate) {

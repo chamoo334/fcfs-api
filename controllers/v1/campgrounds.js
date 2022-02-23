@@ -1,19 +1,17 @@
 const ErrorResponse = require('../../utils/ErrorResponse');
-// const geocoder = require('../../utils/geocoder');
-const genDs = require('./generalCampQuery');
+const genDs = require('./generalQuery');
 const asyncHandler = require('../../middleware/async');
 const Campground = require('../../models/Campground');
 const Park = require('../../models/Park');
 const State = require('../../models/State');
 const slugify = require('slugify');
-// const { query } = require('express');
 const path = require('path');
+// const gq = require('../../middleware/generalQuery');
 
 // @desc    Get all campgrounds
 // @route   GET /api/v1/campgrounds
 // @access  Public
 exports.getCampgrounds = asyncHandler(async (req, res, next) => {
-  await genDs.advanceCampQuery(req, res);
   res.status(200).json(res.advancedResults);
 });
 
@@ -22,7 +20,6 @@ exports.getCampgrounds = asyncHandler(async (req, res, next) => {
 // @access  Public
 exports.getCampsRadius = asyncHandler(async (req, res, next) => {
   // TODO: add sort by distance
-  await genDs.advanceCampQuery(req, res, null, { fee: 'asc' });
   res.status(200).json(res.advancedResults);
 });
 
@@ -30,14 +27,6 @@ exports.getCampsRadius = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state
 //@access   Public
 exports.getState = asyncHandler(async (req, res, next) => {
-  await genDs.advanceCampQuery(req, res);
-
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
   res.status(200).json(res.advancedResults);
 });
 
@@ -45,14 +34,6 @@ exports.getState = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state/:park
 //@access   Public
 exports.getPark = asyncHandler(async (req, res, next) => {
-  await genDs.advanceCampQuery(req, res);
-
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
   res.status(200).json(res.advancedResults);
 });
 
@@ -60,14 +41,6 @@ exports.getPark = asyncHandler(async (req, res, next) => {
 //@route    GET /api/v1/:state/:park/:campground
 //@access   Public
 exports.getCampground = asyncHandler(async (req, res, next) => {
-  await genDs.advanceCampQuery(req, res);
-
-  if (res.resultsError) {
-    return next(
-      new ErrorResponse(res.resultsError.msg, res.resultsError.status)
-    );
-  }
-
   res.status(200).json(res.advancedResults);
 });
 
@@ -78,6 +51,8 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
   if (!req.body.park) {
     return next(new ErrorResponse(`Please include a park name`, 400));
   }
+
+  req.body.lastModifiedBy = req.user.name;
 
   let createdPark = false;
   const parkSlug = slugify(req.body.park, { lower: true });
@@ -149,6 +124,8 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground
 //@access   Private Users
 exports.putCampground = asyncHandler(async (req, res, next) => {
+  req.body.lastModifiedBy = req.user.name;
+
   const park = await genDs.findPark(
     req.params.park,
     res,
@@ -296,7 +273,10 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
     }
   );
 
-  await Campground.findByIdAndUpdate(campground._id, { photo: file.name });
+  await Campground.findByIdAndUpdate(campground._id, {
+    photo: file.name,
+    lastModifiedBy: req.user.name,
+  });
 
   res.status(200).json({
     sucess: true,
