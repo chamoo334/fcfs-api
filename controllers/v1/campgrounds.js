@@ -1,12 +1,11 @@
 const ErrorResponse = require('../../utils/ErrorResponse');
-const genDs = require('./generalQuery');
+const { findState, findPark } = require('../../middleware/generalQuery');
 const asyncHandler = require('../../middleware/async');
 const Campground = require('../../models/Campground');
 const Park = require('../../models/Park');
 const State = require('../../models/State');
 const slugify = require('slugify');
 const path = require('path');
-// const gq = require('../../middleware/generalQuery');
 
 // @desc    Get all campgrounds
 // @route   GET /api/v1/campgrounds
@@ -58,7 +57,7 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
   const parkSlug = slugify(req.body.park, { lower: true });
 
   //find park or create park (requires an address)
-  let park = await genDs.findPark(
+  let park = await findPark(
     parkSlug,
     res,
     req.params.state.toUpperCase(),
@@ -76,7 +75,7 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
     }
 
     // obtain state data
-    const state = await genDs.findState(req.params.state.toUpperCase(), res);
+    const state = await findState(req.params.state.toUpperCase(), res);
     if (res.resultsError) {
       return next(
         new ErrorResponse(res.resultsError.msg, res.resultsError.status)
@@ -126,7 +125,7 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
 exports.putCampground = asyncHandler(async (req, res, next) => {
   req.body.lastModifiedBy = req.user.name;
 
-  const park = await genDs.findPark(
+  const park = await findPark(
     req.params.park,
     res,
     req.params.state.toUpperCase(),
@@ -158,7 +157,7 @@ exports.putCampground = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground/good
 //@access   PUBLIC
 exports.putGood = asyncHandler(async (req, res, next) => {
-  const park = await genDs.findPark(
+  const park = await findPark(
     req.params.park,
     res,
     req.params.state.toUpperCase(),
@@ -190,7 +189,7 @@ exports.putGood = asyncHandler(async (req, res, next) => {
 //@route    PUT /api/v1/:state/:park/:campground/bad
 //@access   PUBLIC
 exports.putBad = asyncHandler(async (req, res, next) => {
-  const park = await genDs.findPark(
+  const park = await findPark(
     req.params.park,
     res,
     req.params.state.toUpperCase(),
@@ -233,7 +232,7 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const park = await genDs.findPark(
+  const park = await findPark(
     req.params.park,
     res,
     req.params.state.toUpperCase(),
@@ -260,9 +259,9 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
   }
 
   const file = req.files.file;
-  file.name = `photo_${campground.id}_${path.parse(file.name).ext}`;
+  file.name = `photo_${campground.id}${path.parse(file.name).ext}`;
 
-  // TODO: remove old image before adding new
+  // TODO: create photo model for uploading images to mongodb
 
   file.mv(
     `${process.env.FILE_UPLOAD_PATH}/campgrounds/${file.name}`,
@@ -322,7 +321,7 @@ exports.delPark = asyncHandler(async (req, res, next) => {
 //@route    DELETE /api/v1/:state/:park/:campground
 //@access   Private Admin
 exports.delCampground = asyncHandler(async (req, res, next) => {
-  const park = await genDs.findPark(
+  const park = await findPark(
     req.params.park,
     res,
     req.params.state.toUpperCase(),
