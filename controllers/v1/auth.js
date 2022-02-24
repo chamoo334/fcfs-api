@@ -47,10 +47,7 @@ exports.authLogin = asyncHandler(async (req, res, next) => {
 // @route   GET api/v1/auth/login
 // @access  Private/User/Contributor/Admin
 exports.authLogout = asyncHandler(async (req, res, next) => {
-  // res.cookie('token', 'none', {
-  //   expires: new Date(Date.now() + 10 * 1000),
-  //   httpOnly: true,
-  // });
+  //TODO: consider black list for old tokens
 
   res.clearCookie('token');
 
@@ -103,7 +100,6 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: 'email sent',
-      token: resetToken,
     });
   } catch (err) {
     // console.log(err);
@@ -180,30 +176,6 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 
   sendTokenCookieResponse(user, 200, res);
 });
-
-// @desc    Get current logged in user
-// @route   POST api/v1/auth/me
-// @access  Private user
-// exports.getMe = asyncHandler(async (req, res, next) => {
-//   const user = req.user;
-
-//   res.status(200).json({
-//     success: true,
-//     data: user,
-//   });
-// });
-
-// @desc    Get current logged in user
-// @route   POST api/v1/auth/me
-// @access  Private user
-// exports.getMe = asyncHandler(async (req, res, next) => {
-//   const user = req.user;
-
-//   res.status(200).json({
-//     success: true,
-//     data: user,
-//   });
-// });
 
 //get token, create cookie and send both in response
 const sendTokenCookieResponse = (user, statusCode, res) => {

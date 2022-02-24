@@ -6,6 +6,31 @@ const Park = require('../../models/Park');
 const State = require('../../models/State');
 const slugify = require('slugify');
 const path = require('path');
+const fs = require('fs');
+
+// @desc    Get a photo
+// @route   GET /api/v1//photo/:photoslug
+// @access  Public
+//TODO: decide on Photo model and get photos by state and park
+exports.getPhoto = asyncHandler(async (req, res, next) => {
+  const imgPath = req.params.photoslug;
+  // const imgRoot = path.join(__dirname, `../../${process.env.FILE_UPLOAD_PATH}`);
+  const options = {
+    root: path.join(__dirname, `../../${process.env.FILE_UPLOAD_PATH}`),
+  };
+
+  const imgType = imgPath.substring(imgPath.length - 3);
+  const cType = `image/${imgType}`;
+  console.log(cType);
+
+  if (!fs.existsSync(`${options.root}/${imgPath}`)) {
+    return next(
+      new ErrorResponse(`Image ${req.params.photoslug} does not exist.`, 404)
+    );
+  }
+
+  res.sendFile(imgPath, options);
+});
 
 // @desc    Get all campgrounds
 // @route   GET /api/v1/campgrounds
@@ -264,7 +289,7 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
   const campgroundUpdate = await Campground.findByIdAndUpdate(
     campground.id,
     {
-      photo: file.name.substring(0, file.name.length - 4),
+      photo: file.name,
     },
     { new: true, runValidators: false }
   );

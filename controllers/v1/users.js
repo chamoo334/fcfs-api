@@ -1,8 +1,5 @@
-// const ErrorResponse = require('../../utils/ErrorResponse');
-// const sendEmail = require('../../utils/sendEmail');
 const asyncHandler = require('../../middleware/async');
 const User = require('../../models/User');
-// const crypto = require('crypto');
 
 // @desc    Get all users
 // @route   GET api/v1/users

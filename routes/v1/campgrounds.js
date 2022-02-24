@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {
+  getPhoto,
   getCampgrounds,
   getCampsRadius,
   getState,
@@ -17,6 +18,8 @@ const {
 const { protect, authorize } = require('../../middleware/auth');
 const { advanceQuery } = require('../../middleware/generalQuery');
 const Campground = require('../../models/Campground');
+
+router.route('/photo/:photoslug').get(getPhoto);
 
 router.route('/campgrounds').get(advanceQuery(Campground), getCampgrounds);
 router
