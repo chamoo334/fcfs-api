@@ -8,45 +8,43 @@ const crypto = require('crypto');
 // @route   POST api/v1/auth/register
 // @access  Public
 exports.authRegister = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
-  // const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-  // // create user
-  // const user = await User.create({
-  //   name,
-  //   email,
-  //   password,
-  //   role: 'user',
-  // });
+  // create user
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
 
-  // const confirmEmailToken = user.generateEmailConfirmToken();
+  const confirmEmailToken = user.generateEmailConfirmToken();
 
-  // const confirmEmailURL = `${req.protocol}://${req.get(
-  //   'host'
-  // )}/api/v1/auth/confirmemail?token=${confirmEmailToken}`;
+  const confirmEmailURL = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/auth/confirmemail?token=${confirmEmailToken}`;
 
-  // const message = `You are receiving this email because you need to confirm your email address. Please make a GET request to: \n\n ${confirmEmailURL}`;
+  const message = `You are receiving this email because you need to confirm your email address. Please make a GET request to: \n\n ${confirmEmailURL}`;
 
-  // user.save({ validateBeforeSave: false });
+  user.save({ validateBeforeSave: false });
 
-  // try {
-  //   await sendEmail({
-  //     email: user.email,
-  //     subject: 'Email confirmation token',
-  //     message,
-  //   });
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Email confirmation token',
+      message,
+    });
 
-  //   sendTokenCookieResponse(user, 200, res);
-  // } catch (err) {
-  //   await User.deleteOne({ id: user.id });
-  //   return next(
-  //     new ErrorResponse(
-  //       `Email could not be sent: ${err}. Please try to register again.`,
-  //       500
-  //     )
-  //   );
-  // }
-  res.sendStatus(200);
+    sendTokenCookieResponse(user, 200, res, confirmEmailToken);
+  } catch (err) {
+    await User.deleteOne({ id: user.id });
+    return next(
+      new ErrorResponse(
+        `Email could not be sent: ${err}. Please try to register again.`,
+        500
+      )
+    );
+  }
+  // res.sendStatus(200);
 });
 
 exports.authConfirmEmail = asyncHandler(async (req, res, next) => {
@@ -84,12 +82,12 @@ exports.authConfirmEmail = asyncHandler(async (req, res, next) => {
 // @route   POST api/v1/auth/login
 // @access  Public
 exports.authLogin = asyncHandler(async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return next(new ErrorResponse('User email and password required', 400));
+  const { name, password } = req.body;
+  if (!name || !password) {
+    return next(new ErrorResponse('User name and password required', 400));
   }
 
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ name }).select('+password');
   if (!user) {
     return next(new ErrorResponse('Invalid credentials', 401));
   }
@@ -239,8 +237,17 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 });
 
 //get token, create cookie and send both in response
-const sendTokenCookieResponse = (user, statusCode, res) => {
-  const token = user.getSignedJwtToken();
+const sendTokenCookieResponse = (
+  user,
+  statusCode,
+  res,
+  isConfirmEmail = null
+) => {
+  let token = user.getSignedJwtToken();
+
+  if (isConfirmEmail) {
+    token = isConfirmEmail;
+  }
 
   const options = {
     expires: new Date(

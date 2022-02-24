@@ -1,29 +1,26 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async options => {
-  const tpData = {
-    host: process.env.SMTP_HOST_P,
-    port: process.env.SMTP_PORT_P,
-    user: process.env.SMTP_EMAIL_P,
-    password: process.env.SMTP_PASSWORD_P,
-  };
+  let transporter;
 
-  if (process.env.NODE_ENV === 'development') {
-    tpData.host = process.env.SMTP_HOST_D;
-    tpData.port = process.env.SMTP_PORT_D;
-    tpData.user = process.env.SMTP_EMAIL_D;
-    tpData.password = process.env.SMTP_PASSWORD_D;
-  }
-  console.log(tpData);
-
-  const transporter = nodemailer.createTransport({
-    host: tpData.host,
-    port: tpData.port,
+  // if (process.env.NODE_ENV === 'development') {
+  //   transporter = nodemailer.createTransport({
+  //     host: process.env.SMTP_HOST_D,
+  //     port: process.env.SMTP_PORT_D,
+  //     auth: {
+  //       user: process.env.SMTP_EMAIL_D,
+  //       pass: process.env.SMTP_PASSWORD_D,
+  //     },
+  //   });
+  // } else {
+  transporter = nodemailer.createTransport({
+    service: process.env.SMTP_SERVICE_P,
     auth: {
-      user: tpData.user,
-      pass: tpData.password,
+      user: process.env.SMTP_USER_P,
+      pass: process.env.SMTP_PASSWORD_P,
     },
   });
+  // }
 
   const message = {
     from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
@@ -33,7 +30,6 @@ const sendEmail = async options => {
   };
 
   await transporter.sendMail(message);
-  // console.log(info);
 };
 
 module.exports = sendEmail;

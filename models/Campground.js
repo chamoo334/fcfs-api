@@ -107,6 +107,7 @@ const CampgroundSchema = new mongoose.Schema(
           total: ret.goodVotes + ret.badVotes,
           percentPos: (ret.goodVotes / (ret.goodVotes + ret.badVotes)) * 100,
         };
+        ret.parkSlug = slugify(ret.park, { lower: true });
         delete ret.goodVotes;
         delete ret.badVotes;
       },

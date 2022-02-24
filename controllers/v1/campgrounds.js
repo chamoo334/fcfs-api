@@ -7,6 +7,7 @@ const State = require('../../models/State');
 const slugify = require('slugify');
 const path = require('path');
 const fs = require('fs');
+const User = require('../../models/User');
 
 // @desc    Get a photo
 // @route   GET /api/v1//photo/:photoslug
@@ -137,6 +138,12 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
 
   const newCampground = await Campground.create(req.body);
 
+  await User.findByIdAndUpdate(
+    req.user.id,
+    { role: 'contributor' },
+    { new: true, runValidators: false }
+  );
+
   res.status(201).json({
     sucess: true,
     data: newCampground,
@@ -203,10 +210,7 @@ exports.putGood = asyncHandler(async (req, res, next) => {
     { new: true, runValidators: true }
   );
 
-  res.status(200).json({
-    sucess: true,
-    data: campground,
-  });
+  upgradeUser(req, res, campground);
 });
 
 //@desc     Increase negative rating by 1 of specific campground
@@ -235,10 +239,7 @@ exports.putBad = asyncHandler(async (req, res, next) => {
     { new: true, runValidators: true }
   );
 
-  res.status(200).json({
-    sucess: true,
-    data: campground,
-  });
+  upgradeUser(req, res, campground);
 });
 
 //@desc     Upload an image for a specific campground
@@ -294,10 +295,7 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
     { new: true, runValidators: false }
   );
 
-  res.status(200).json({
-    sucess: true,
-    data: campgroundUpdate,
-  });
+  upgradeUser(req, res, campground);
 });
 
 //@desc     Delete a specific park and its campgrounds
@@ -363,3 +361,25 @@ exports.delCampground = asyncHandler(async (req, res, next) => {
 
   res.sendStatus(204);
 });
+
+//upgrade user for contributing
+const upgradeUser = async (req, res, resData) => {
+  if (req.user.role === 'user') {
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { role: 'contributor' },
+      { new: true, runValidators: false }
+    );
+
+    res.status(200).json({
+      success: true,
+      note: 'CONGRATS! You are now a contributor!',
+      data: resData,
+    });
+  } else {
+    res.status(200).json({
+      success: true,
+      data: resData,
+    });
+  }
+};
