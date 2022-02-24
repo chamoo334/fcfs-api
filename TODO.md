@@ -2,6 +2,14 @@
 
 ## TODO
 
+### - Backend / Server
+
+- [ ] middleware/xssCleanIn.js - > find xss-clean alternative
+- [ ] controllers/v1/auth.js -> authLogout blacklist for tokens
+- [ ] models/Campground -> CampgroundSchema.pre('findOneAndUpdate') -> cache userID if attempting alter prohibited field
+- [ ] models/Photo.js -> complete integration
+- [ ] routes/v1/auth.js -> reduce try/catch
+
 ### - Frontend / Client
 
 - [ ] Home Page

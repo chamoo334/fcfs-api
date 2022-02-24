@@ -86,7 +86,6 @@ const CampgroundSchema = new mongoose.Schema(
     },
     lastModifiedBy: {
       type: String,
-      // required: true, TODO: create pre check to require lastModifiedBy for everything but voting
     },
     photo: {
       type: String,
@@ -118,7 +117,6 @@ const CampgroundSchema = new mongoose.Schema(
 // Validate campground name is unique to park
 async function campParkValidator(value) {
   if (this.isModified('photo') || this.isModified('photoID')) {
-    console.log('should skip campPark');
     return true;
   }
 
@@ -172,7 +170,7 @@ CampgroundSchema.pre('findOneAndUpdate', async function (next) {
   let rejected = [];
   const data = this.getUpdate();
 
-  // check for prohibited items TODO: catch userID and add to watch list
+  // TODO: cache userID and add to watch list
   prohibited.forEach(item => {
     if (item in data) {
       rejected.push(item);
@@ -185,8 +183,6 @@ CampgroundSchema.pre('findOneAndUpdate', async function (next) {
     );
   }
 
-  // change address TODO: reduce duplicate code found in geocode pre hook and reduce if else
-  // TODO: verify loc was successful
   if ('address' in data && !('location' in data)) {
     const loc = await geocoder.geocode(data.address);
 

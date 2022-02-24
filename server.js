@@ -44,7 +44,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1/auth', v1Auth);
 app.use('/api/v1/users', v1Users);
 app.use('/api/v1', v1Campgrounds);
-// app.use('/api/v1', v1Campgrounds);
 
 app.use(errHandler);
 

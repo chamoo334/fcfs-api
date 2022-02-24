@@ -3,6 +3,7 @@ const router = express.Router();
 const { protect } = require('../../middleware/auth');
 const {
   authRegister,
+  authConfirmEmail,
   authLogin,
   authLogout,
   getMe,
@@ -16,7 +17,7 @@ router.post('/register', authRegister);
 router.post('/login', authLogin);
 router.get('/logout', authLogout);
 router.get('/me', protect, getMe);
-// router.get('/confirmemail', confirmEmail);
+router.get('/confirmemail', authConfirmEmail);
 router.put('/updatedetails', protect, updateDetails);
 router.put('/updatepassword', protect, updatePassword);
 router.post('/forgotpassword', forgotPassword);

@@ -8,15 +8,74 @@ const crypto = require('crypto');
 // @route   POST api/v1/auth/register
 // @access  Public
 exports.authRegister = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  console.log(req.body);
+  // const { name, email, password } = req.body;
 
-  // create user
-  const user = await User.create({
-    name,
-    email,
-    password,
-    role,
+  // // create user
+  // const user = await User.create({
+  //   name,
+  //   email,
+  //   password,
+  //   role: 'user',
+  // });
+
+  // const confirmEmailToken = user.generateEmailConfirmToken();
+
+  // const confirmEmailURL = `${req.protocol}://${req.get(
+  //   'host'
+  // )}/api/v1/auth/confirmemail?token=${confirmEmailToken}`;
+
+  // const message = `You are receiving this email because you need to confirm your email address. Please make a GET request to: \n\n ${confirmEmailURL}`;
+
+  // user.save({ validateBeforeSave: false });
+
+  // try {
+  //   await sendEmail({
+  //     email: user.email,
+  //     subject: 'Email confirmation token',
+  //     message,
+  //   });
+
+  //   sendTokenCookieResponse(user, 200, res);
+  // } catch (err) {
+  //   await User.deleteOne({ id: user.id });
+  //   return next(
+  //     new ErrorResponse(
+  //       `Email could not be sent: ${err}. Please try to register again.`,
+  //       500
+  //     )
+  //   );
+  // }
+  res.sendStatus(200);
+});
+
+exports.authConfirmEmail = asyncHandler(async (req, res, next) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return next(new ErrorResponse('Invalid Token', 400));
+  }
+
+  const splitToken = token.split('.')[0];
+  const confirmEmailToken = crypto
+    .createHash('sha256')
+    .update(splitToken)
+    .digest('hex');
+
+  // get user by token
+  const user = await User.findOne({
+    confirmEmailToken,
+    isEmailConfirmed: false,
   });
+
+  if (!user) {
+    return next(new ErrorResponse('Invalid Token', 400));
+  }
+
+  user.confirmEmailToken = undefined;
+  user.isEmailConfirmed = true;
+
+  user.save({ validateBeforeSave: false });
 
   sendTokenCookieResponse(user, 200, res);
 });
@@ -68,7 +127,6 @@ exports.getMe = asyncHandler(async (req, res, next) => {
   });
 });
 
-//TEST: try and catch
 // @desc    Generate and email reset password token
 // @route   POST api/v1/auth/forgotPassword
 // @access  Public
@@ -102,12 +160,11 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
       data: 'email sent',
     });
   } catch (err) {
-    // console.log(err);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
     await user.save({ validateBeforeSave: false });
-    return next(new ErrorResponse('Email could not be sent', 500));
+    return next(new ErrorResponse(`Email could not be sent: ${err}`, 500));
   }
 });
 
@@ -143,11 +200,15 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 // @route   PUT api/v1/auth/updateDetails
 // @access  Private/User/Contributor/Admin
 exports.updateDetails = asyncHandler(async (req, res, next) => {
-  //TODO: reduce so that it is either or, but both aren't required
-  const fieldsTOUpdate = {
-    name: req.body.name,
-    email: req.body.email,
-  };
+  const fieldsTOUpdate = {};
+
+  if (req.body.name) {
+    fieldsTOUpdate.name = req.body.name;
+  }
+
+  if (req.body.email) {
+    fieldsTOUpdate.email = req.body.email;
+  }
 
   const user = await User.findByIdAndUpdate(req.user.id, fieldsTOUpdate, {
     new: true,

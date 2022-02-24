@@ -7,9 +7,9 @@ const ParkSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, 'Please add a name'],
-      unique: true, //TODO: use middleware to ensure name is unique to state
       trim: true,
       maxlength: [50, "Campground's name cannot be longer than 50 characters"],
+      validate: [parkStateValidator, 'Park already exists in provided state.'],
     },
     slug: String,
     stateID: {
@@ -47,6 +47,24 @@ const ParkSchema = new mongoose.Schema(
     },
   }
 );
+
+// Validate park name is unique to state
+async function parkStateValidator(value) {
+  if (this.isModified('location') || this.isModified('address')) {
+    return true;
+  }
+
+  const parks = await mongoose.models.Park.find({
+    stateID: this.stateID,
+    name: value,
+  });
+
+  if (parks.length > 0) {
+    return false;
+  }
+
+  return true;
+}
 
 // Geocode & create location field
 ParkSchema.pre('save', async function (next) {
