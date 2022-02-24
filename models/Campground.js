@@ -96,6 +96,10 @@ const CampgroundSchema = new mongoose.Schema(
       type: String,
       default: 'no-photo.jpg',
     },
+    photoID: {
+      type: String,
+      default: 'no-photo.jpg',
+    },
   },
   {
     toJSON: {
@@ -104,9 +108,8 @@ const CampgroundSchema = new mongoose.Schema(
         delete ret.__v;
         delete ret.parkID;
         delete ret.stateID;
-        delete ret.photo;
+        // delete ret.photo;
         delete ret.location.type;
-        delete ret.photo;
         const lat = ret.location.coordinates[1];
         const lon = ret.location.coordinates[0];
         ret.location.coordinates = [lat, lon];
@@ -121,7 +124,6 @@ const CampgroundSchema = new mongoose.Schema(
   }
 );
 
-//TEST: verify asyncHandler is not needed or use try and catch
 // Validate campground name is unique to park
 async function campParkValidator(value) {
   const campgrounds = await mongoose.models.Campground.find({
@@ -139,6 +141,10 @@ async function campParkValidator(value) {
 
 //create campground slug from name
 CampgroundSchema.pre('save', function (next) {
+  if (this.isModified('photo') || this.isModified('photoID')) {
+    console.log('should skip');
+    next();
+  }
   this.slug = slugify(this.name, { lower: true });
   next();
 });

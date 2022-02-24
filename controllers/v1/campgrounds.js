@@ -3,9 +3,12 @@ const { findState, findPark } = require('../../middleware/generalQuery');
 const asyncHandler = require('../../middleware/async');
 const Campground = require('../../models/Campground');
 const Park = require('../../models/Park');
+const Photo = require('../../models/Photo');
 const State = require('../../models/State');
 const slugify = require('slugify');
 const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 
 // @desc    Get all campgrounds
 // @route   GET /api/v1/campgrounds
@@ -45,7 +48,7 @@ exports.getCampground = asyncHandler(async (req, res, next) => {
 
 //@desc     Create a new campground and/or park
 //@route    POST /api/v1/:state
-//@access   Users
+//@access   Private/User/Contributor/Admin
 exports.postCampground = asyncHandler(async (req, res, next) => {
   if (!req.body.park) {
     return next(new ErrorResponse(`Please include a park name`, 400));
@@ -121,7 +124,7 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
 
 //@desc     Update data of a spceific campground
 //@route    PUT /api/v1/:state/:park/:campground
-//@access   Private Users
+//@access   Private/Contributor/Admin
 exports.putCampground = asyncHandler(async (req, res, next) => {
   req.body.lastModifiedBy = req.user.name;
 
@@ -155,7 +158,7 @@ exports.putCampground = asyncHandler(async (req, res, next) => {
 
 //@desc     Increase positive rating by 1 of specific campground
 //@route    PUT /api/v1/:state/:park/:campground/good
-//@access   PUBLIC
+//@access   Private/User/Contributor/Admin
 exports.putGood = asyncHandler(async (req, res, next) => {
   const park = await findPark(
     req.params.park,
@@ -187,7 +190,7 @@ exports.putGood = asyncHandler(async (req, res, next) => {
 
 //@desc     Increase negative rating by 1 of specific campground
 //@route    PUT /api/v1/:state/:park/:campground/bad
-//@access   PUBLIC
+//@access   Private/User/Contributor/Admin
 exports.putBad = asyncHandler(async (req, res, next) => {
   const park = await findPark(
     req.params.park,
@@ -219,7 +222,7 @@ exports.putBad = asyncHandler(async (req, res, next) => {
 
 //@desc     Upload an image for a specific campground
 //@route    PUT /api/v1/:state/:park/:campground/photo
-//@access   Private Users
+//@access   Private/User/Contributor/Admin
 exports.putPhoto = asyncHandler(async (req, res, next) => {
   if (!req.files || !req.files.file.mimetype.startsWith('image')) {
     return next(new ErrorResponse('Please upload an image file.', 400));
@@ -250,43 +253,72 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
     stateID: park[0].stateID,
   });
 
-  console.log(campground);
-
   if (!campground) {
-    return res
-      .status(400)
-      .json({ success: false, error: 'Server not able to find campground' });
+    return next(new ErrorResponse('Server not able to find campground', 400));
   }
 
+  const oldPhotoID = campground.photoID || null;
+
   const file = req.files.file;
-  file.name = `photo_${campground.id}${path.parse(file.name).ext}`;
+  file.name = `photo-camp-${campground.slug}${path.parse(file.name).ext}`;
 
-  // TODO: create photo model for uploading images to mongodb
+  await file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`);
 
-  file.mv(
-    `${process.env.FILE_UPLOAD_PATH}/campgrounds/${file.name}`,
-    async err => {
-      if (err) {
-        return next(new ErrorResponse(`Server upload error(${err})`, 500));
-      }
-    }
-  );
+  const photoData = {
+    name: file.name,
+    img: {
+      data: fs.readFileSync(
+        path.join(
+          __dirname,
+          `../../${process.env.FILE_UPLOAD_PATH}/${file.name}`
+        )
+      ),
+      contentType: file.mimetype,
+    },
+  };
 
-  await Campground.findByIdAndUpdate(campground._id, {
-    photo: file.name,
-    lastModifiedBy: req.user.name,
+  const photo = await Photo.create(photoData);
+
+  if (!photo) {
+    return next(new ErrorResponse('Server error', 500));
+  }
+
+  // update campground
+  //FIXME: campground.save w/ validation Error: Cannot read properties of undefined (reading 'minConfidence')
+  // campground.photo = photo.slug;
+  // campground.photoID = photo.id;
+  // console.log(campground.photo, campground.photoID);
+  // campground.markModified('photo');
+  // campground.save({ validateBeforeSave: false });
+  const campgroundUpdate = await Campground.findByIdAndUpdate(campground.id, {
+    photo: photo.slug,
+    photoID: photo.id,
   });
+
+  // cleanup uploads folder
+  const delFiles = fs
+    .readdirSync(`${process.env.FILE_UPLOAD_PATH}`)
+    .filter(fn => fn.startsWith(file.name.substring(0, file.name.length - 4)));
+
+  for (const fName of delFiles) {
+    const fullDelPath = `${process.env.FILE_UPLOAD_PATH}/${fName}`;
+    fs.unlinkSync(fullDelPath);
+  }
+
+  // delete old photo from db
+  if (oldPhotoID) {
+    await Photo.findByIdAndDelete(oldPhotoID);
+  }
 
   res.status(200).json({
     sucess: true,
-    // TODO: determine if you want to include full campground
-    data: file.name,
+    data: campgroundUpdate,
   });
 });
 
 //@desc     Delete a specific park and its campgrounds
 //@route    DELETE /api/v1/:state/:park
-//@access   Private Admin
+//@access   Private/Admin
 exports.delPark = asyncHandler(async (req, res, next) => {
   const state = await State.find({
     identifier: req.params.state.toUpperCase(),
@@ -319,7 +351,7 @@ exports.delPark = asyncHandler(async (req, res, next) => {
 
 //@desc     Delete a specific campground
 //@route    DELETE /api/v1/:state/:park/:campground
-//@access   Private Admin
+//@access   Private/Admin
 exports.delCampground = asyncHandler(async (req, res, next) => {
   const park = await findPark(
     req.params.park,

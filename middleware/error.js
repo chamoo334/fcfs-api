@@ -13,7 +13,7 @@ const errorHandler = (err, req, res, next) => {
 
   // Bad ObjectID for Mongoose
   if (err.name === 'CastError') {
-    const message = `Campground id ${err.value} formatted incorrectly`;
+    const message = `Resource not found.`;
     error = new ErrorResponse(message, 404);
   }
 

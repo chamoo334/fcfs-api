@@ -43,9 +43,25 @@ exports.authLogin = asyncHandler(async (req, res, next) => {
   sendTokenCookieResponse(user, 200, res);
 });
 
+// @desc    Logout a user & clear cookie
+// @route   GET api/v1/auth/login
+// @access  Private/User/Contributor/Admin
+exports.authLogout = asyncHandler(async (req, res, next) => {
+  // res.cookie('token', 'none', {
+  //   expires: new Date(Date.now() + 10 * 1000),
+  //   httpOnly: true,
+  // });
+
+  res.clearCookie('token');
+
+  res.status(200).json({
+    success: true,
+  });
+});
+
 // @desc    Get current logged in user
 // @route   POST api/v1/auth/me
-// @access  Private user
+// @access  Private/User/Contributor/Admin
 exports.getMe = asyncHandler(async (req, res, next) => {
   const user = req.user;
 
@@ -55,6 +71,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
   });
 });
 
+//TEST: try and catch
 // @desc    Generate and email reset password token
 // @route   POST api/v1/auth/forgotPassword
 // @access  Public
@@ -89,7 +106,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
       token: resetToken,
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
@@ -128,7 +145,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
 // @desc    Update user details
 // @route   PUT api/v1/auth/updateDetails
-// @access  Private user
+// @access  Private/User/Contributor/Admin
 exports.updateDetails = asyncHandler(async (req, res, next) => {
   //TODO: reduce so that it is either or, but both aren't required
   const fieldsTOUpdate = {
@@ -149,7 +166,7 @@ exports.updateDetails = asyncHandler(async (req, res, next) => {
 
 // @desc    Update password
 // @route   PUT api/v1/auth/updatePassword
-// @access  Private user
+// @access  Private/User/Contributor/Admin
 exports.updatePassword = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 

@@ -3,11 +3,17 @@ const v1Auth = require('./routes/v1/auth');
 const v1Users = require('./routes/v1/users');
 const connectDB = require('./config/db');
 const errHandler = require('./middleware/error');
+const { cleanInput } = require('./middleware/xssCleanIn');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const hpp = require('hpp');
+const rateLimit = require('express-rate-limit');
+const cors = require('cors'); //TODO: consider options for users and auth
 const path = require('path');
 
 // load env & connect database
@@ -24,6 +30,16 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(fileupload());
+app.use(mongoSanitize());
+app.use(helmet());
+app.use(cleanInput());
+
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use(limiter);
+
+app.use(hpp());
+app.use(cors());
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1/auth', v1Auth);
 app.use('/api/v1/users', v1Users);

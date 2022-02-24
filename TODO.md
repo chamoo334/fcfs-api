@@ -2,49 +2,6 @@
 
 ## TODO
 
-### - [ ] Backend / Server
-
-- [ ] Database interactions
-  - [ ] Submit a new campsite
-    - [ ] authenticated users only
-    - [x] field validation via API
-  - [ ] Update a campsite PUT
-    - [ ] authenticated users only
-    - [x] field validation via API
-  - [ ] Delete a campsite
-    - [ ] admin only
-  - [ ] Delete a Park
-    - [ ] admin only
-    - [x] delete associated campgrounds
-- [ ] Users & Authentication
-  - [ ] Authentication via cookies (look at other alternatives)
-  - [ ] Registration
-    - [ ] Once registered a token with cookie will be sent
-    - [ ] Passwords must be hashed
-  - [ ] Login
-    - [ ] User login with username and password
-    - [ ] Once logged in a token will be sent along with a cookie
-  - [ ] Logout
-    - set token = none
-  - [ ] Password reset (lost password)
-    - [ ] User can request to reset password
-    - [ ] A hashed token will be emailed to the users registered email address
-    - [ ] A put request can be made to the generated url to reset password
-    - [ ] The token will expire after 60 minutes
-  - [ ] Update user info
-    - [ ] Authenticated user only
-    - [ ] Separate route to update password
-  - [ ] User CRUD
-    - [ ] Admin only
-- [ ] Security
-  - [ ] Encrypt passwords and reset tokens
-  - [ ] Prevent cross site scripting - XSS
-  - [ ] Prevent NoSQL injections
-  - [ ] Add a rate limit for requests of 100 requests per 10 minutes
-  - [ ] Protect against http param polution
-  - [ ] Add headers for security (helmet)
-  - [ ] Use cors to make API public (for now)
-
 ### - Frontend / Client
 
 - [ ] Home Page
@@ -68,28 +25,17 @@
   - [ ] vote on campground
     - [ ] authenticated users can update
 - [ ] API Documentation Page
+- [ ] Security
+  - [ ] Prevent XSS using domPurify
 
 ## In Progress
 
 ### - [ ] Backend / Server
 
-- [ ] Users & Authentication
-  - [ ] Authentication via cookies (look at other alternatives)
-  - [ ] Registration
-    - [ ] Once registered a token with cookie will be sent
-    - [ ] Passwords must be hashed
 - [ ] Database interactions
-  - [ ] Submit a new campsite
-    - [ ] authenticated users only
-    - [x] field validation via API
-  - [ ] Update a campsite PUT
-    - [ ] authenticated users only
-    - [x] field validation via API
-  - [ ] Delete a campsite
-    - [ ] admin only
-  - [ ] Delete a Park
-    - [ ] admin only
-    - [x] delete associated campgrounds
+  - [ ] Photo Model
+    - [ ] store user and campground images
+    - [ ] add relationship to shemas
 
 ## Done ✓
 
@@ -114,3 +60,52 @@
   - [x] List campgrounds by park in a state
   - [x] Fetch specific campground
   - [x] Pagination
+  - [x] Submit a new campsite
+    - [x] authenticated users only
+    - [x] field validation via API
+  - [x] Update a campsite PUT
+    - [x] authenticated users only
+    - [x] field validation via API
+  - [x] Delete a campsite
+    - [x] admin only
+  - [x] Delete a Park
+    - [x] admin only
+    - [x] delete associated campgrounds
+- [ ] Users & Authentication
+  - [x] Authentication via cookies or headers
+  - [x] Registration
+    - [x] Once registered a token with cookie will be sent
+    - [x] Passwords must be hashed
+  - [x] Login
+    - [x] User login with username and password
+    - [x] Once logged in a token will be sent along with a cookie
+  - [x] Logout
+    - [x] set token = none
+  - [x] Password reset (lost password)
+    - [x] User can request to reset password
+    - [x] A hashed token will be emailed to the users registered email address
+    - [x] A put request can be made to the generated url to reset password
+    - [ ] The token will expire after 60 minutes
+  - [x] Update user info
+    - [x] Authenticated user only
+    - [x] Separate route to update password
+  - [x] Update user password
+    - [x] Authenticated user only
+    - [x] validate current and new passwords
+  - [x] User CRUD
+    - [x] Admin only
+- [x] Security
+  - [x] Encrypt passwords and reset tokens
+  - [x] Prevent XSS by stripping html from input
+  - [x] Prevent NoSQL injections using express-mongo-sanitize
+  - [x] Add a rate limit for requests of 100 requests per 10 minutes
+  - [x] Protect against http param polution
+  - [x] Add headers for security (helmet)
+  - [x] Use cors to make API public (for now)
+
+## Consider
+
+### - [ ] Backend / Server
+
+- [ ] Security
+  - [ ] Prevent cross site scripting xss-clean vs xss
