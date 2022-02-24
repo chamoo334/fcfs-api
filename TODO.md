@@ -36,6 +36,7 @@
   - [ ] Photo Model
     - [ ] store user and campground images
     - [ ] add relationship to shemas
+  - [ ] GET api/photo/:photoName
 
 ## Done ✓
 

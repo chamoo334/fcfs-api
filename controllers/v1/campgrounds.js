@@ -3,12 +3,9 @@ const { findState, findPark } = require('../../middleware/generalQuery');
 const asyncHandler = require('../../middleware/async');
 const Campground = require('../../models/Campground');
 const Park = require('../../models/Park');
-const Photo = require('../../models/Photo');
 const State = require('../../models/State');
 const slugify = require('slugify');
 const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
 
 // @desc    Get all campgrounds
 // @route   GET /api/v1/campgrounds
@@ -21,7 +18,6 @@ exports.getCampgrounds = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/campgrounds/:zipcode/:distance
 // @access  Public
 exports.getCampsRadius = asyncHandler(async (req, res, next) => {
-  // TODO: add sort by distance
   res.status(200).json(res.advancedResults);
 });
 
@@ -257,58 +253,21 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Server not able to find campground', 400));
   }
 
-  const oldPhotoID = campground.photoID || null;
-
   const file = req.files.file;
   file.name = `photo-camp-${campground.slug}${path.parse(file.name).ext}`;
 
-  await file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`);
+  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`);
 
-  const photoData = {
-    name: file.name,
-    img: {
-      data: fs.readFileSync(
-        path.join(
-          __dirname,
-          `../../${process.env.FILE_UPLOAD_PATH}/${file.name}`
-        )
-      ),
-      contentType: file.mimetype,
+  //FIXME: validateBeforeSave error: Cannot read properties of undefined (reading 'minConfidence')
+  // campground.photo = file.name;
+  // await campground.save({ validateBeforeSave: false });
+  const campgroundUpdate = await Campground.findByIdAndUpdate(
+    campground.id,
+    {
+      photo: file.name.substring(0, file.name.length - 4),
     },
-  };
-
-  const photo = await Photo.create(photoData);
-
-  if (!photo) {
-    return next(new ErrorResponse('Server error', 500));
-  }
-
-  // update campground
-  //FIXME: campground.save w/ validation Error: Cannot read properties of undefined (reading 'minConfidence')
-  // campground.photo = photo.slug;
-  // campground.photoID = photo.id;
-  // console.log(campground.photo, campground.photoID);
-  // campground.markModified('photo');
-  // campground.save({ validateBeforeSave: false });
-  const campgroundUpdate = await Campground.findByIdAndUpdate(campground.id, {
-    photo: photo.slug,
-    photoID: photo.id,
-  });
-
-  // cleanup uploads folder
-  const delFiles = fs
-    .readdirSync(`${process.env.FILE_UPLOAD_PATH}`)
-    .filter(fn => fn.startsWith(file.name.substring(0, file.name.length - 4)));
-
-  for (const fName of delFiles) {
-    const fullDelPath = `${process.env.FILE_UPLOAD_PATH}/${fName}`;
-    fs.unlinkSync(fullDelPath);
-  }
-
-  // delete old photo from db
-  if (oldPhotoID) {
-    await Photo.findByIdAndDelete(oldPhotoID);
-  }
+    { new: true, runValidators: false }
+  );
 
   res.status(200).json({
     sucess: true,

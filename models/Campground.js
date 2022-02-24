@@ -35,10 +35,6 @@ const CampgroundSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: [
-        true,
-        'An address is required if new campground is associated with a new park',
-      ],
     },
     location: {
       // GeoJSON Point
@@ -96,10 +92,6 @@ const CampgroundSchema = new mongoose.Schema(
       type: String,
       default: 'no-photo.jpg',
     },
-    photoID: {
-      type: String,
-      default: 'no-photo.jpg',
-    },
   },
   {
     toJSON: {
@@ -108,7 +100,6 @@ const CampgroundSchema = new mongoose.Schema(
         delete ret.__v;
         delete ret.parkID;
         delete ret.stateID;
-        // delete ret.photo;
         delete ret.location.type;
         const lat = ret.location.coordinates[1];
         const lon = ret.location.coordinates[0];
@@ -126,6 +117,11 @@ const CampgroundSchema = new mongoose.Schema(
 
 // Validate campground name is unique to park
 async function campParkValidator(value) {
+  if (this.isModified('photo') || this.isModified('photoID')) {
+    console.log('should skip campPark');
+    return true;
+  }
+
   const campgrounds = await mongoose.models.Campground.find({
     stateID: this.stateID,
     park: this.park,
@@ -141,10 +137,6 @@ async function campParkValidator(value) {
 
 //create campground slug from name
 CampgroundSchema.pre('save', function (next) {
-  if (this.isModified('photo') || this.isModified('photoID')) {
-    console.log('should skip');
-    next();
-  }
   this.slug = slugify(this.name, { lower: true });
   next();
 });
