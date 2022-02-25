@@ -89,7 +89,7 @@ const CampgroundSchema = new mongoose.Schema(
     },
     photo: {
       type: String,
-      default: 'no-photo.jpg',
+      default: 'photo-camp-no-photo.jpg',
     },
   },
   {
