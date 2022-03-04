@@ -61,6 +61,13 @@ exports.getPark = asyncHandler(async (req, res, next) => {
   res.status(200).json(res.advancedResults);
 });
 
+//@desc     Get all parks in a specific state
+//@route    GET /api/v1/parks/:state
+//@access   Public
+exports.getParksState = asyncHandler(async (req, res, next) => {
+  res.status(200).json(res.advancedResults);
+});
+
 //@desc     Get a specific campground
 //@route    GET /api/v1/:state/:park/:campground
 //@access   Public

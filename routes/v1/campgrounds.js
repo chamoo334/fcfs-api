@@ -6,6 +6,7 @@ const {
   getCampsRadius,
   getState,
   getPark,
+  getParksState,
   getCampground,
   postCampground,
   putCampground,
@@ -18,6 +19,7 @@ const {
 const { protect, authorize } = require('../../middleware/auth');
 const { advanceQuery } = require('../../middleware/generalQuery');
 const Campground = require('../../models/Campground');
+const Park = require('../../models/Park');
 
 router.route('/photo/:photoslug').get(getPhoto);
 
@@ -47,5 +49,8 @@ router
   .route('/:state')
   .get(advanceQuery(Campground), getState)
   .post(protect, authorize('user', 'contributor', 'admin'), postCampground);
+router
+  .route('/parks/:state')
+  .get(advanceQuery(Park, null, { fee: 'asc' }), getParksState);
 
 module.exports = router;
