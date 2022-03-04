@@ -180,6 +180,12 @@
   background-color: #28a745;
   color: #fff;
 }
+.alert-wrapper {
+  position: fixed;
+  top: 4rem;
+  left: 2rem;
+  display: inline-block;
+}
 .dark-overlay {
   height: 100%;
   width: 100%;

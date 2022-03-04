@@ -1,8 +1,7 @@
 import React, { Fragment, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
-import PropTypes from 'prop-types';
 
 // const Register = ({ setAlert }) => {
 const Register = () => {
