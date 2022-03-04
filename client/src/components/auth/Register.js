@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 
-// const Register = ({ setAlert }) => {
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -22,8 +21,6 @@ const Register = () => {
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
-      // console.log('password error should alert');
-      // setAlert('Passwords do not match', 'danger');
       dispatch(setAlert('Passwords do not match', 'danger'));
     } else {
       // register({ name, email, password });
@@ -93,9 +90,4 @@ const Register = () => {
   );
 };
 
-// Register.propTypes = {
-//   setAlert: PropTypes.func.isRequired,
-// };
-
-// export default connect(null, { setAlert })(Register);
 export default Register;
