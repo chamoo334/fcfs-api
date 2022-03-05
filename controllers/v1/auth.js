@@ -96,7 +96,6 @@ exports.authLogin = asyncHandler(async (req, res, next) => {
   if (!validPassword) {
     return next(new ErrorResponse('Invalid credentials', 401));
   }
-
   sendTokenCookieResponse(user, 200, res);
 });
 
@@ -118,10 +117,8 @@ exports.authLogout = asyncHandler(async (req, res, next) => {
 // @access  Private/User/Contributor/Admin
 exports.getMe = asyncHandler(async (req, res, next) => {
   const user = req.user;
-
-  res.status(200).json({
-    success: true,
-    data: user,
+  res.json({
+    user,
   });
 });
 

@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -23,8 +24,8 @@ const Register = () => {
     if (password !== password2) {
       dispatch(setAlert('Passwords do not match', 'danger'));
     } else {
-      // register({ name, email, password });
-      console.log(formData);
+      dispatch(register({ name, email, password }));
+      dispatch(setAlert('Check your email before loging in!', 'success'));
     }
   };
 
@@ -58,6 +59,7 @@ const Register = () => {
               name='email'
               value={email}
               onChange={onChange}
+              required
             />
           </div>
           <div className='form-group'>
@@ -68,6 +70,7 @@ const Register = () => {
               name='password'
               value={password}
               onChange={onChange}
+              required
             />
           </div>
           <div className='form-group'>
@@ -78,12 +81,13 @@ const Register = () => {
               name='password2'
               value={password2}
               onChange={onChange}
+              required
             />
           </div>
           <input type='submit' value='Register' className='btn btn-primary' />
         </form>
         <p className='my-1'>
-          Already have an account? <Link to='login'>Sign In</Link>
+          Already have an account? <Link to='/login'>Sign In</Link>
         </p>
       </section>
     </Fragment>
