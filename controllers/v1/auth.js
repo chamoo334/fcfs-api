@@ -117,8 +117,11 @@ exports.authLogout = asyncHandler(async (req, res, next) => {
 // @access  Private/User/Contributor/Admin
 exports.getMe = asyncHandler(async (req, res, next) => {
   const user = req.user;
+  const token = req.token;
+
   res.json({
     user,
+    token,
   });
 });
 
@@ -258,7 +261,6 @@ const sendTokenCookieResponse = (
   }
 
   res.status(statusCode).cookie('token', token, options).json({
-    success: true,
     token,
   });
 };
