@@ -424,3 +424,14 @@ section:first-of-type {
   padding: 25px;
   text-decoration: none;
 }
+
+/* Mobile Styles */
+@media (max-width: 700px) {
+  .container {
+    margin-top: 8rem;
+  }
+
+  .hide-sm {
+    display: none;
+  }
+}

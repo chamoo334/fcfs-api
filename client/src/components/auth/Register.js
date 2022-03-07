@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Navigate } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 
@@ -29,9 +29,10 @@ const Register = () => {
     }
   };
 
-  // if (isAuthenticated) {
-  //   return <Navigate to='/dashboard' />;
-  // }
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  if (isAuthenticated) {
+    return <Navigate to='/' />;
+  }
 
   return (
     <Fragment>
