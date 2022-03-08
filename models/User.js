@@ -26,6 +26,14 @@ const UserSchema = new mongoose.Schema(
       enum: ['user', 'contributor', 'admin'],
       default: 'user',
     },
+    campground_contributions: {
+      type: Number,
+      default: 0,
+    },
+    total_comments: {
+      type: Number,
+      default: 0,
+    },
     password: {
       type: String,
       required: [true, 'Please add a password'],

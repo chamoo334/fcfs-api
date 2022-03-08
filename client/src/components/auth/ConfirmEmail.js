@@ -18,8 +18,10 @@ const ConfirmEmail = () => {
     confirm();
   });
 
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  if (isAuthenticated) {
+  const isEmailConfirmed = useSelector(
+    state => state.auth.user.isEmailConfirmed
+  );
+  if (isEmailConfirmed) {
     return <Navigate to='/dashboard' />;
   }
 

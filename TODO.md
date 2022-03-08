@@ -2,6 +2,10 @@
 
 ## TODO
 
+### Expand User Dashboard page
+
+### Expand comments for individual campgrounds
+
 ### - Backend / Server
 
 - [ ] middleware/xssCleanIn.js - > find xss-clean alternative
@@ -12,22 +16,15 @@
 
 ### - Frontend / Client
 
-- [ ] Home Page
-  - [ ] Registration / Login
-    - [ ] Persistent ?
-  - [ ] Dropdown Navbar
+- [ ] Campgrounds Page
   - [ ] View by state clickable image
-  - [ ] find within your current radius
-- [ ] User Page
-  - [ ] Add campground
-- [ ] State Page
-  - [ ] list all parks
-  - [ ] click to view all parks
-  - [ ] click to go to specific park
+    - [ ] dropdown list all parks
+      - [ ] click to go to specific park
+  - [ ] find within a radius of your current location
 - [ ] Park Page
   - [ ] list all campgrounds
-  - [ ] click to view all campgrounds
   - [ ] click to go to specific campground
+    - [ ] private route
 - [ ] Campground Page
   - [ ] display campground information
   - [ ] vote on campground
@@ -35,8 +32,19 @@
 - [ ] API Documentation Page
 - [ ] Security
   - [ ] Prevent XSS using domPurify
+- [ ] State Page
+  - [ ] list all parks
+  - [ ] click to view all parks
+  - [ ] click to go to specific park
 
 ## In Progress
+
+### - Frontend / Client
+
+- [ ] User Page
+  - [ ] Add campground
+  - [x] Update details
+  - [x] Update password
 
 ## Done ✓
 
@@ -103,6 +111,21 @@
   - [x] Protect against http param polution
   - [x] Add headers for security (helmet)
   - [x] Use cors to make API public (for now)
+
+### - Frontend / Client
+
+- [x] Home Page
+  - [x] Registration / Login
+    - [x] Persistent
+    - [x] forgot password
+  - [x] Navbar
+    - [x] Persistent
+  - [x] redirect to dashboard with valid token
+- [x] Auth
+  - [x] Confirm Email
+    - [x] Redirect to dashboard
+  - [x] reset Password
+    - [x] Redirect to login
 
 ## Consider
 

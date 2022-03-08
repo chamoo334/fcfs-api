@@ -27,7 +27,19 @@ export default function (state = initialState, action) {
         loading: false,
       };
     case USER_LOADED:
+      return {
+        ...state,
+        ...payload,
+        isAuthenticated: true,
+        loading: false,
+      };
     case CONFIRM_EMAIL_SUCCESS:
+      return {
+        ...state,
+        ...payload,
+        isAuthenticated: true,
+        loading: false,
+      };
     case LOGIN_SUCCESS:
       return {
         ...state,
