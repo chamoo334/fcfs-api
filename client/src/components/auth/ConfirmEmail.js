@@ -1,8 +1,7 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { confirmEmail } from '../../actions/auth';
-import { setAlert } from '../../actions/alert';
 
 const ConfirmEmail = () => {
   const useQuery = () => new URLSearchParams(useLocation().search);
@@ -11,16 +10,23 @@ const ConfirmEmail = () => {
 
   const dispatch = useDispatch();
 
-  const confirm = async () => {
-    dispatch(confirmEmail(token));
-    return <Navigate to='/login' />;
-  };
+  useEffect(() => {
+    const confirm = async () => {
+      dispatch(confirmEmail(token));
+    };
+
+    confirm();
+  });
+
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  if (isAuthenticated) {
+    return <Navigate to='/dashboard' />;
+  }
 
   return (
     <Fragment>
       <section className='container'>
         <h1 className='large text-primary'>Confirming Email...</h1>
-        {this.confirm()}
       </section>
     </Fragment>
   );

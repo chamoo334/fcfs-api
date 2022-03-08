@@ -34,7 +34,8 @@ exports.authRegister = asyncHandler(async (req, res, next) => {
       message,
     });
 
-    sendTokenCookieResponse(user, 200, res, confirmEmailToken);
+    // sendTokenCookieResponse(user, 200, res, null, confirmEmailToken);
+    sendTokenCookieResponse(user, 200, res);
   } catch (err) {
     await User.deleteOne({ id: user.id });
     return next(
@@ -47,6 +48,9 @@ exports.authRegister = asyncHandler(async (req, res, next) => {
   // res.sendStatus(200);
 });
 
+// @desc    Confirm user's email address
+// @route   GET api/v1/auth/confirmemail
+// @access  Public
 exports.authConfirmEmail = asyncHandler(async (req, res, next) => {
   const { token } = req.query;
 
@@ -75,7 +79,7 @@ exports.authConfirmEmail = asyncHandler(async (req, res, next) => {
 
   user.save({ validateBeforeSave: false });
 
-  sendTokenCookieResponse(user, 200, res);
+  sendTokenCookieResponse(user, 200, res, true);
 });
 
 // @desc    Login a user
@@ -234,18 +238,19 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
   sendTokenCookieResponse(user, 200, res);
 });
 
-//get token, create cookie and send both in response
+//create token & cookie and send both in response
 const sendTokenCookieResponse = (
   user,
   statusCode,
   res,
-  isConfirmEmail = null
+  sendUser = null
+  // isConfirmEmail = null
 ) => {
   let token = user.getSignedJwtToken();
 
-  if (isConfirmEmail) {
-    token = isConfirmEmail;
-  }
+  // if (isConfirmEmail) {
+  //   token = isConfirmEmail;
+  // }
 
   const options = {
     expires: new Date(
@@ -258,6 +263,12 @@ const sendTokenCookieResponse = (
     options.secure = true;
   }
 
+  if (sendUser) {
+    res.status(statusCode).cookie('token', token, options).json({
+      user,
+      token,
+    });
+  }
   res.status(statusCode).cookie('token', token, options).json({
     token,
   });

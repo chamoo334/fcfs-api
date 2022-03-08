@@ -6,6 +6,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  CONFIRM_EMAIL_SUCCESS,
+  CONFIRM_EMAIL_FAIL,
 } from '../actions/constants';
 
 const initialState = {
@@ -18,19 +20,14 @@ const initialState = {
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
-    case USER_LOADED:
-      return {
-        ...state,
-        ...payload,
-        isAuthenticated: true,
-        loading: false,
-      };
     case REGISTER_SUCCESS:
       return {
         ...state,
         isAuthenticated: false,
         loading: false,
       };
+    case USER_LOADED:
+    case CONFIRM_EMAIL_SUCCESS:
     case LOGIN_SUCCESS:
       return {
         ...state,
@@ -38,6 +35,15 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         loading: false,
       };
+    case CONFIRM_EMAIL_FAIL:
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        loading: false,
+        user: null,
+      };
+
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT:

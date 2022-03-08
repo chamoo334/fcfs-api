@@ -6,6 +6,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  CONFIRM_EMAIL_SUCCESS,
 } from './constants';
 import axios from 'axios';
 import { setAlert } from './alert';
@@ -154,7 +155,10 @@ export const resetPassword = (password, resetToken) => async dispatch => {
 
 export const confirmEmail = confirmEmailToken => async dispatch => {
   try {
-    await axios.put(`/api/v1/auth/confirmemail?token=${confirmEmailToken}`);
+    const res = await axios.get(
+      `/api/v1/auth/confirmemail?token=${confirmEmailToken}`
+    );
+    dispatch({ type: CONFIRM_EMAIL_SUCCESS, payload: res.data });
     dispatch(setAlert('Email confirmed!', 'success'));
   } catch (err) {
     dispatch(setAlert(err.response.data.error, 'danger'));
