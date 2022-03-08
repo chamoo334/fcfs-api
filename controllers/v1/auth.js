@@ -128,7 +128,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 // @access  Public
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   // find user and set reset token and expiration
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ name: req.body.name });
   if (!user) {
     return next(new ErrorResponse('User with provided email not found', 404));
   }

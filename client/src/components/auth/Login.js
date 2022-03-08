@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../actions/auth';
+import { login, forgotPassword } from '../../actions/auth';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +19,11 @@ const Login = () => {
   const onSubmit = async e => {
     e.preventDefault();
     dispatch(login(name, password));
+  };
+
+  const forgottenPassword = async e => {
+    e.preventDefault();
+    dispatch(forgotPassword(name));
   };
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -54,6 +59,12 @@ const Login = () => {
             />
           </div>
           <input type='submit' value='Login' className='btn btn-primary' />
+          <input
+            type='button'
+            onClick={forgottenPassword}
+            value='Forgot Password?'
+            className='btn btn-danger'
+          />
         </form>
         <p className='my-1'>
           Don't have an account? <Link to='/register'>Register</Link>

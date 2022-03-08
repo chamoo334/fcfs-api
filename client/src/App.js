@@ -5,6 +5,9 @@ import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import ResetPassword from './components/auth/ResetPassword';
+import ConfirmEmail from './components/auth/ConfirmEmail';
+
 import Alert from './components/layout/Alert';
 import Dashboard from './components/dashboard/Dashboard';
 
@@ -36,6 +39,12 @@ const App = () => {
             path='dashboard'
             element={<PrivateRoute component={Dashboard} />}
           />
+          <Route
+            exact
+            path='/resetpassword/:resetToken'
+            element={<ResetPassword />}
+          />
+          <Route exact path='/confirmemail' element={<ConfirmEmail />} />
         </Routes>
       </Router>
     </Provider>

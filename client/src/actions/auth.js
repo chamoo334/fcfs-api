@@ -90,7 +90,7 @@ export const updateDetails = (name, email) => async dispatch => {
 
   const body = JSON.stringify(preBody);
   try {
-    await axios.get('/api/v1/auth/updatedetails', body, config);
+    await axios.put('/api/v1/auth/updatedetails', body, config);
     dispatch(loadUser());
     dispatch(setAlert('Details updated!', 'success'));
   } catch (err) {
@@ -108,9 +108,55 @@ export const updatePassword =
 
     const body = JSON.stringify({ newPassword, currentPassword });
     try {
-      await axios.get('/api/v1/auth/updatepassword', body, config);
+      await axios.put('/api/v1/auth/updatepassword', body, config);
       dispatch(setAlert('Password updated!', 'success'));
     } catch (err) {
       dispatch(setAlert(err.response.data.error, 'danger'));
     }
   };
+
+export const forgotPassword = name => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ name });
+  try {
+    await axios.post('/api/v1/auth/forgotpassword', body, config);
+    dispatch(
+      setAlert(
+        'A link to reset your password has been emailed to you!',
+        'success'
+      )
+    );
+  } catch (err) {
+    dispatch(setAlert(err.response.data.error, 'danger'));
+  }
+};
+
+export const resetPassword = (password, resetToken) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ password });
+  try {
+    await axios.put(`/api/v1/auth/resetpassword/${resetToken}`, body, config);
+    dispatch(setAlert('Proceed to login with updated password!', 'success'));
+  } catch (err) {
+    dispatch(setAlert(err.response.data.error, 'danger'));
+  }
+};
+
+export const confirmEmail = confirmEmailToken => async dispatch => {
+  try {
+    await axios.put(`/api/v1/auth/confirmemail?token=${confirmEmailToken}`);
+    dispatch(setAlert('Email confirmed!', 'success'));
+  } catch (err) {
+    dispatch(setAlert(err.response.data.error, 'danger'));
+  }
+};
