@@ -7,8 +7,8 @@ const Landing = () => {
 
   const authLinks = (
     <div className='buttons'>
-      <Link to='/user' className='btn btn-primary'>
-        View Profile & Stats
+      <Link to='/dashboard' className='btn btn-primary'>
+        Dashboard
       </Link>
     </div>
   );

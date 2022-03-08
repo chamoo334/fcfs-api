@@ -31,7 +31,7 @@ const Register = () => {
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   if (isAuthenticated) {
-    return <Navigate to='/' />;
+    return <Navigate to='/dashboard' />;
   }
 
   return (

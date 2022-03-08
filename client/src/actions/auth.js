@@ -63,5 +63,10 @@ export const login = (name, password) => async dispatch => {
 };
 
 export const logout = (name, password) => async dispatch => {
-  dispatch({ type: LOGOUT });
+  try {
+    await axios.get('/api/v1/auth/logout');
+    dispatch({ type: LOGOUT });
+  } catch (err) {
+    dispatch(setAlert(err.response.data.error, 'danger'));
+  }
 };

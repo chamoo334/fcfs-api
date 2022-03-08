@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../actions/auth';
-import { setAlert } from '../../actions/alert';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +23,7 @@ const Login = () => {
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   if (isAuthenticated) {
-    return <Navigate to='/' />;
+    return <Navigate to='/dashboard' />;
   }
 
   return (

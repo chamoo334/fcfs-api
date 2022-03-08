@@ -100,16 +100,14 @@ exports.authLogin = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Logout a user & clear cookie
-// @route   GET api/v1/auth/login
+// @route   GET api/v1/auth/logout
 // @access  Private/User/Contributor/Admin
 exports.authLogout = asyncHandler(async (req, res, next) => {
   //TODO: consider black list for old tokens
 
   res.clearCookie('token');
 
-  res.status(200).json({
-    success: true,
-  });
+  res.sendStatus(200);
 });
 
 // @desc    Get current logged in user

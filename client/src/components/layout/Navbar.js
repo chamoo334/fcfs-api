@@ -44,7 +44,7 @@ const Navbar = () => {
   return (
     <nav className='navbar bg-dark'>
       <h1>
-        <Link to='/'>
+        <Link to='/dashboard'>
           <i className='fas fa-toilet-paper'></i> FCFS Community
         </Link>
       </h1>
