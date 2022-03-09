@@ -4,13 +4,11 @@ import { updateDetails, updatePassword } from '../../actions/auth';
 import Spinner from '../layout/Spinner';
 
 const Dashboard = () => {
-  const [userName, setUserName] = useState(null);
-  const [userRole, setUserRole] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   const user = useSelector(state => state.auth.user);
   useEffect(() => {
-    setUserName(user.name);
-    setUserRole(user.role);
+    setUserData(user);
   }, [user]);
 
   const [formData, setFormData] = useState({
@@ -37,7 +35,7 @@ const Dashboard = () => {
     dispatch(updatePassword(newPassword, currentPassword));
   };
 
-  return userName === null && userRole === null ? (
+  return userData === null ? (
     <Spinner />
   ) : (
     <Fragment>
@@ -53,10 +51,14 @@ const Dashboard = () => {
               />
             </section>
             <section className='campground-right_top'>
-              <h1 className='large'>{userName}</h1>
-              <h2 className='medium'>Role: {userRole}</h2>
-              {userRole === 'user' && (
-                <p> Comment or submit a campground to upgrade to contributor</p>
+              <h1 className='large'>{userData.name}</h1>
+              <h2 className='medium'>Role: {userData.role}</h2>
+              {userData.role === 'user' && (
+                <p>
+                  {' '}
+                  Submit campground or comment or vote on a campground to
+                  upgrade to contributor
+                </p>
               )}
             </section>
           </div>
@@ -66,8 +68,10 @@ const Dashboard = () => {
             <h2 className='amenities-header text-primary'>User Stats</h2>
             <div className='amenities'>
               <ul>
-                <li>12 Campground Contributions</li>
-                <li>30 Comments w/ 56% upvotes</li>
+                <li>
+                  {userData.campgroundContributions} Campground Contributions
+                </li>
+                <li>{userData.totalComments} Comments</li>
               </ul>
             </div>
           </div>

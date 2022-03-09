@@ -13,6 +13,7 @@ import {
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: false,
+  isConfirmed: false,
   loading: false,
   user: null,
 };
@@ -24,6 +25,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isAuthenticated: false,
+        isConfirmed: false,
         loading: false,
       };
     case USER_LOADED:
@@ -31,13 +33,15 @@ export default function (state = initialState, action) {
         ...state,
         ...payload,
         isAuthenticated: true,
+        isConfirmed: false,
         loading: false,
       };
     case CONFIRM_EMAIL_SUCCESS:
       return {
         ...state,
-        ...payload,
+        token: null,
         isAuthenticated: true,
+        isConfirmed: true,
         loading: false,
       };
     case LOGIN_SUCCESS:
@@ -45,6 +49,7 @@ export default function (state = initialState, action) {
         ...state,
         ...payload,
         isAuthenticated: true,
+        isConfirmed: false,
         loading: false,
       };
     case CONFIRM_EMAIL_FAIL:
@@ -52,6 +57,7 @@ export default function (state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
+        isConfirmed: false,
         loading: false,
         user: null,
       };
@@ -65,6 +71,7 @@ export default function (state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
+        isConfirmed: false,
         loading: false,
         user: null,
       };

@@ -19,9 +19,11 @@ exports.authRegister = asyncHandler(async (req, res, next) => {
 
   const confirmEmailToken = user.generateEmailConfirmToken();
 
-  const confirmEmailURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/auth/confirmemail?token=${confirmEmailToken}`;
+  // const confirmEmailURL = `${req.protocol}://${req.get(
+  //   'host'
+  // )}/confirmemail?token=${confirmEmailToken}`;
+
+  const confirmEmailURL = `${req.protocol}://localhost:3000/confirmemail?token=${confirmEmailToken}`;
 
   const message = `You are receiving this email because you need to confirm your email address. Please make a GET request to: \n\n ${confirmEmailURL}`;
 
@@ -143,7 +145,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   // email user resetURL
   const resetUrl = `${req.protocol}://${req.get(
     'host'
-  )}/api/v1/auth/resetpassword/${resetToken}`;
+  )}/resetpassword/${resetToken}`;
 
   const message = `You are receiving this email because you (or someone else) has 
     requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
@@ -268,8 +270,9 @@ const sendTokenCookieResponse = (
       user,
       token,
     });
+  } else {
+    res.status(statusCode).cookie('token', token, options).json({
+      token,
+    });
   }
-  res.status(statusCode).cookie('token', token, options).json({
-    token,
-  });
 };

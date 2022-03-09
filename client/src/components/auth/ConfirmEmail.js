@@ -16,13 +16,11 @@ const ConfirmEmail = () => {
     };
 
     confirm();
-  });
+  }, []);
 
-  const isEmailConfirmed = useSelector(
-    state => state.auth.user.isEmailConfirmed
-  );
-  if (isEmailConfirmed) {
-    return <Navigate to='/dashboard' />;
+  const isConfirmed = useSelector(state => state.auth.isConfirmed);
+  if (isConfirmed) {
+    return <Navigate to='/login' />;
   }
 
   return (

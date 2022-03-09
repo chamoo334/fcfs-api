@@ -148,13 +148,11 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
   await User.findByIdAndUpdate(
     req.user.id,
     { role: 'contributor' },
+
     { new: true, runValidators: false }
   );
 
-  res.status(201).json({
-    sucess: true,
-    data: newCampground,
-  });
+  upgradeUser(req, res, newCampground, true);
 });
 
 //@desc     Update data of a spceific campground
@@ -185,10 +183,7 @@ exports.putCampground = asyncHandler(async (req, res, next) => {
     { new: true, runValidators: true }
   );
 
-  res.status(200).json({
-    sucess: true,
-    data: campground,
-  });
+  upgradeUser(req, res, campground, true);
 });
 
 //@desc     Increase positive rating by 1 of specific campground
@@ -217,7 +212,7 @@ exports.putGood = asyncHandler(async (req, res, next) => {
     { new: true, runValidators: true }
   );
 
-  upgradeUser(req, res, campground);
+  upgradeUser(req, res, campground, true);
 });
 
 //@desc     Increase negative rating by 1 of specific campground
@@ -246,7 +241,7 @@ exports.putBad = asyncHandler(async (req, res, next) => {
     { new: true, runValidators: true }
   );
 
-  upgradeUser(req, res, campground);
+  upgradeUser(req, res, campground, true);
 });
 
 //@desc     Upload an image for a specific campground
@@ -302,7 +297,7 @@ exports.putPhoto = asyncHandler(async (req, res, next) => {
     { new: true, runValidators: false }
   );
 
-  upgradeUser(req, res, campground);
+  upgradeUser(req, res, campground, true);
 });
 
 //@desc     Delete a specific park and its campgrounds
@@ -370,7 +365,13 @@ exports.delCampground = asyncHandler(async (req, res, next) => {
 });
 
 //upgrade user for contributing
-const upgradeUser = async (req, res, resData) => {
+const upgradeUser = async (
+  req,
+  res,
+  resData,
+  isCamp = null,
+  isComment = null
+) => {
   if (req.user.role === 'user') {
     await User.findByIdAndUpdate(
       req.user.id,
@@ -378,15 +379,25 @@ const upgradeUser = async (req, res, resData) => {
       { new: true, runValidators: false }
     );
 
-    res.status(200).json({
-      success: true,
-      note: 'CONGRATS! You are now a contributor!',
-      data: resData,
-    });
-  } else {
-    res.status(200).json({
-      success: true,
-      data: resData,
-    });
+    resData.note = 'CONGRATS! You are now a contributor!';
   }
+
+  if (isCamp) {
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { $inc: { campgroundContributions: 1 } },
+      { new: true, runValidators: false }
+    );
+  } else if (isComment) {
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { $inc: { totalComments: 1 } },
+      { new: true, runValidators: false }
+    );
+  }
+
+  res.status(200).json({
+    success: true,
+    resData,
+  });
 };

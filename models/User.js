@@ -26,11 +26,11 @@ const UserSchema = new mongoose.Schema(
       enum: ['user', 'contributor', 'admin'],
       default: 'user',
     },
-    campground_contributions: {
+    campgroundContributions: {
       type: Number,
       default: 0,
     },
-    total_comments: {
+    totalComments: {
       type: Number,
       default: 0,
     },

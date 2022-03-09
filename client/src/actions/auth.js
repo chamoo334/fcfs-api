@@ -155,10 +155,8 @@ export const resetPassword = (password, resetToken) => async dispatch => {
 
 export const confirmEmail = confirmEmailToken => async dispatch => {
   try {
-    const res = await axios.get(
-      `/api/v1/auth/confirmemail?token=${confirmEmailToken}`
-    );
-    dispatch({ type: CONFIRM_EMAIL_SUCCESS, payload: res.data });
+    await axios.get(`/api/v1/auth/confirmemail?token=${confirmEmailToken}`);
+    dispatch({ type: CONFIRM_EMAIL_SUCCESS });
     dispatch(setAlert('Email confirmed!', 'success'));
   } catch (err) {
     dispatch(setAlert(err.response.data.error, 'danger'));
