@@ -1,8 +1,8 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateDetails, updatePassword } from '../../actions/auth';
+import { updateDetails, updatePassword } from '../../actions/dashboard';
+import { setAlert } from '../../actions/alert';
 import Spinner from '../layout/Spinner';
-import Construction from '../layout/Construction';
 
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
@@ -18,43 +18,74 @@ const Dashboard = () => {
     email: '',
     newPassword: '',
     currentPassword: '',
+    campgroundName: '',
+    parkName: '',
   });
 
   const dispatch = useDispatch();
 
-  const { name, email, newPassword, currentPassword } = formData;
+  const {
+    name,
+    email,
+    newPassword,
+    currentPassword,
+    campgroundName,
+    parkName,
+  } = formData;
 
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmitDetails = async e => {
     e.preventDefault();
-    dispatch(updateDetails(name, email));
+    if (name.length === 0 && email.length === 0) {
+      dispatch(setAlert('Both name and email cannot be empty.', 'danger'));
+    } else {
+      dispatch(updateDetails(name, email));
+      setDisplayForm(<div></div>);
+    }
   };
 
   const onSubmitPassword = async e => {
     e.preventDefault();
     dispatch(updatePassword(newPassword, currentPassword));
+    setDisplayForm(<div></div>);
+  };
+
+  const onSubmitCampground = async e => {
+    e.preventDefault();
+    console.log('add campground');
+    setDisplayForm(<div></div>);
   };
 
   const updateDetailsBtn = async e => {
     e.preventDefault();
     setDisplayForm(
-      <Fragment>
-        <form onSubmit={onSubmitDetails} className='form'>
-          <div className='form-group'>
-            <input type='text' placeholder='Name' />
-          </div>
-          <div className='form-group'>
-            <input type='email' placeholder='Email' />
-          </div>
+      <form onSubmit={onSubmitDetails} className='form'>
+        <div className='form-group'>
           <input
-            type='submit'
-            value='Update User Details'
-            className='btn btn-primary'
+            type='text'
+            placeholder='Name'
+            name='name'
+            value={name}
+            onChange={onChange}
           />
-        </form>
-      </Fragment>
+        </div>
+        <div className='form-group'>
+          <input
+            type='email'
+            placeholder='Email'
+            name='email'
+            value={email}
+            onChange={onChange}
+          />
+        </div>
+        <input
+          type='submit'
+          value='Update User Details'
+          className='btn btn-primary'
+        />
+      </form>
     );
   };
 
@@ -96,10 +127,33 @@ const Dashboard = () => {
   const submitCampgroundBtn = async e => {
     e.preventDefault();
     setDisplayForm(
-      <div>
-        <h3>Add Form for Campground Submission</h3>
-        <Construction />
-      </div>
+      <form onSubmit={onSubmitCampground} className='form'>
+        <div className='form-group'>
+          <input
+            type='text'
+            placeholder="Campground's Name"
+            name='campgroundName'
+            value={campgroundName}
+            onChange={onChange}
+            required
+          />
+        </div>
+        <div className='form-group'>
+          <input
+            type='text'
+            placeholder="Park's Name"
+            name='parkName'
+            value={parkName}
+            onChange={onChange}
+            required
+          />
+        </div>
+        <input
+          type='submit'
+          value='Submit Campground'
+          className='btn btn-primary'
+        />
+      </form>
     );
   };
 
