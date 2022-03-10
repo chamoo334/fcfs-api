@@ -7,6 +7,8 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ResetPassword from './components/auth/ResetPassword';
 import ConfirmEmail from './components/auth/ConfirmEmail';
+import States from './components/camps/States';
+import Api from './components/apidoc/Api';
 
 import Alert from './components/layout/Alert';
 import Dashboard from './components/dashboard/Dashboard';
@@ -45,6 +47,8 @@ const App = () => {
             element={<ResetPassword />}
           />
           <Route exact path='/confirmemail' element={<ConfirmEmail />} />
+          <Route exact path='/states' element={<States />} />
+          <Route exact path='/apidocs' element={<Api />} />
         </Routes>
       </Router>
     </Provider>

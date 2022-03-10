@@ -10,17 +10,12 @@
 
 - [ ] middleware/xssCleanIn.js - > find xss-clean alternative
 - [ ] controllers/v1/auth.js -> authLogout blacklist for tokens
-- [ ] models/Campground -> CampgroundSchema.pre('findOneAndUpdate') -> cache userID if attempting alter prohibited field
+- [ ] models/Campground -> CampgroundSchema.pre('findOneAndUpdate') -> cache userID if attempting to alter prohibited field
 - [ ] models/Photo.js -> complete integration
 - [ ] routes/v1/auth.js -> reduce try/catch
 
 ### - Frontend / Client
 
-- [ ] Campgrounds Page
-  - [ ] View by state clickable image
-    - [ ] dropdown list all parks
-      - [ ] click to go to specific park
-  - [ ] find within a radius of your current location
 - [ ] Park Page
   - [ ] list all campgrounds
   - [ ] click to go to specific campground
@@ -45,6 +40,11 @@
   - [ ] Add campground
   - [x] Update details
   - [x] Update password
+- [ ] Campgrounds Page
+  - [ ] View by state clickable image
+    - [ ] dropdown list all parks
+      - [ ] click to go to specific park
+  - [ ] find within a radius of your current location
 
 ## Done ✓
 
@@ -62,7 +62,7 @@
   - [x] PUT /v1/:state/:park/:campground/bad
   - [x] DELETE /v1/:state/:park
   - [x] DELETE /v1/:state/:park/:campground
-- [ ] Database interactions
+- [x] Database interactions
   - [x] List all campgrounds
   - [x] List all campgrounds by state
   - [x] Search by radious from zipcode using geocoder to get exact locations
@@ -80,7 +80,7 @@
   - [x] Delete a Park
     - [x] admin only
     - [x] delete associated campgrounds
-- [ ] Users & Authentication
+- [x] Users & Authentication
   - [x] Authentication via cookies or headers
   - [x] Registration
     - [x] Once registered a token with cookie will be sent
@@ -94,7 +94,7 @@
     - [x] User can request to reset password
     - [x] A hashed token will be emailed to the users registered email address
     - [x] A put request can be made to the generated url to reset password
-    - [ ] The token will expire after 60 minutes
+    - [x] The token will expire after 60 minutes
   - [x] Update user info
     - [x] Authenticated user only
     - [x] Separate route to update password

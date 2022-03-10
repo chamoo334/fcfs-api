@@ -1,15 +1,25 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateDetails, updatePassword } from '../../actions/auth';
 import Spinner from '../layout/Spinner';
 
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
+  const [displayForm, setDisplayForm] = useState(<div></div>);
 
   const user = useSelector(state => state.auth.user);
   useEffect(() => {
     setUserData(user);
   }, [user]);
+
+  let formRef = useRef();
+  useEffect(() => {
+    document.addEventListener('mousedown', event => {
+      if (!formRef.current.contains(event.target)) {
+        setDisplayForm(<div></div>);
+      }
+    });
+  });
 
   const [formData, setFormData] = useState({
     name: '',
@@ -33,6 +43,57 @@ const Dashboard = () => {
   const onSubmitPassword = async e => {
     e.preventDefault();
     dispatch(updatePassword(newPassword, currentPassword));
+  };
+
+  const updateDetailsBtn = async e => {
+    e.preventDefault();
+    setDisplayForm(
+      <form onSubmit={onSubmitDetails} className='form'>
+        <div className='form-group'>
+          <input type='text' placeholder='Name' />
+        </div>
+        <div className='form-group'>
+          <input type='email' placeholder='Email' />
+        </div>
+        <input type='submit' value='Update' className='btn btn-primary' />
+      </form>
+    );
+  };
+
+  const updatePasswordBtn = async e => {
+    e.preventDefault();
+    setDisplayForm(
+      <form onSubmit={onSubmitPassword} className='form'>
+        <div className='form-group'>
+          <input
+            type='password'
+            placeholder='New Password'
+            minLength='7'
+            name='newPassword'
+            value={newPassword}
+            onChange={onChange}
+            required
+          />
+        </div>
+        <div className='form-group'>
+          <input
+            type='password'
+            placeholder='Current Password'
+            minLength='7'
+            name='currentPassword'
+            value={currentPassword}
+            onChange={onChange}
+            required
+          />
+        </div>
+        <input type='submit' value='Update' className='btn btn-primary' />
+      </form>
+    );
+  };
+
+  const submitCampgroundBtn = async e => {
+    e.preventDefault();
+    setDisplayForm(<div>Add Form for Campground Submission</div>);
   };
 
   return userData === null ? (
@@ -64,7 +125,6 @@ const Dashboard = () => {
           </div>
 
           <div className='campground-amenities bg-light pg-2'>
-            <div className='line'></div>
             <h2 className='amenities-header text-primary'>User Stats</h2>
             <div className='amenities'>
               <ul>
@@ -75,54 +135,33 @@ const Dashboard = () => {
               </ul>
             </div>
           </div>
-
-          <div className='campground-comment bg-white p-2'>
-            <h2 className='text-primary'>Recent Comment 1</h2>
-            <div>
-              <p>Under Construction</p>
+          <div ref={formRef} className='campground-amenities bg-dark pg-2'>
+            <div className='amenities'>
+              <ul>
+                <li>
+                  <button onClick={updateDetailsBtn}>
+                    <h1 className='medium text-primary btn'>Update Details</h1>
+                  </button>
+                </li>
+                <li>
+                  <button onClick={updatePasswordBtn}>
+                    <h1 className='medium text-primary btn'>Change Password</h1>
+                  </button>
+                </li>
+                <li>
+                  <button onClick={submitCampgroundBtn}>
+                    <h1 className='medium text-primary btn'>
+                      Submit Campground
+                    </h1>
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div className='campground-amenities bg-light pg-2'>
+              {displayForm}
             </div>
           </div>
         </div>
-        <section className='container'>
-          <h1 className='medium text-primary'>Update Details</h1>
-          <form onSubmit={onSubmitDetails} className='form'>
-            <div className='form-group'>
-              <input type='text' placeholder='Name' />
-            </div>
-            <div className='form-group'>
-              <input type='email' placeholder='Email' />
-            </div>
-            <input type='submit' value='Update' className='btn btn-primary' />
-          </form>
-        </section>
-        <section className='container'>
-          <h1 className='medium text-primary'>Change Password</h1>
-          <form onSubmit={onSubmitPassword} className='form'>
-            <div className='form-group'>
-              <input
-                type='password'
-                placeholder='New Password'
-                minLength='7'
-                name='newPassword'
-                value={newPassword}
-                onChange={onChange}
-                required
-              />
-            </div>
-            <div className='form-group'>
-              <input
-                type='password'
-                placeholder='Current Password'
-                minLength='7'
-                name='currentPassword'
-                value={currentPassword}
-                onChange={onChange}
-                required
-              />
-            </div>
-            <input type='submit' value='Update' className='btn btn-primary' />
-          </form>
-        </section>
       </section>
     </Fragment>
   );
