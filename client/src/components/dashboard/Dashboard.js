@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateDetails, updatePassword } from '../../actions/auth';
 import Spinner from '../layout/Spinner';
+import Construction from '../layout/Construction';
 
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
@@ -11,15 +12,6 @@ const Dashboard = () => {
   useEffect(() => {
     setUserData(user);
   }, [user]);
-
-  let formRef = useRef();
-  useEffect(() => {
-    document.addEventListener('mousedown', event => {
-      if (!formRef.current.contains(event.target)) {
-        setDisplayForm(<div></div>);
-      }
-    });
-  });
 
   const [formData, setFormData] = useState({
     name: '',
@@ -48,15 +40,21 @@ const Dashboard = () => {
   const updateDetailsBtn = async e => {
     e.preventDefault();
     setDisplayForm(
-      <form onSubmit={onSubmitDetails} className='form'>
-        <div className='form-group'>
-          <input type='text' placeholder='Name' />
-        </div>
-        <div className='form-group'>
-          <input type='email' placeholder='Email' />
-        </div>
-        <input type='submit' value='Update' className='btn btn-primary' />
-      </form>
+      <Fragment>
+        <form onSubmit={onSubmitDetails} className='form'>
+          <div className='form-group'>
+            <input type='text' placeholder='Name' />
+          </div>
+          <div className='form-group'>
+            <input type='email' placeholder='Email' />
+          </div>
+          <input
+            type='submit'
+            value='Update User Details'
+            className='btn btn-primary'
+          />
+        </form>
+      </Fragment>
     );
   };
 
@@ -86,14 +84,23 @@ const Dashboard = () => {
             required
           />
         </div>
-        <input type='submit' value='Update' className='btn btn-primary' />
+        <input
+          type='submit'
+          value='Update Password'
+          className='btn btn-primary'
+        />
       </form>
     );
   };
 
   const submitCampgroundBtn = async e => {
     e.preventDefault();
-    setDisplayForm(<div>Add Form for Campground Submission</div>);
+    setDisplayForm(
+      <div>
+        <h3>Add Form for Campground Submission</h3>
+        <Construction />
+      </div>
+    );
   };
 
   return userData === null ? (
@@ -117,7 +124,7 @@ const Dashboard = () => {
               {userData.role === 'user' && (
                 <p>
                   {' '}
-                  Submit campground or comment or vote on a campground to
+                  Submit a campground or comment or vote on a campground to
                   upgrade to contributor
                 </p>
               )}
@@ -135,7 +142,8 @@ const Dashboard = () => {
               </ul>
             </div>
           </div>
-          <div ref={formRef} className='campground-amenities bg-dark pg-2'>
+          <div className='campground-amenities bg-dark pg-2'>
+            {/* <div ref={formRef} className='campground-amenities bg-dark pg-2'> */}
             <div className='amenities'>
               <ul>
                 <li>

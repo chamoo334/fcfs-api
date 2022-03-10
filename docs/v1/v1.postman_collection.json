@@ -1,0 +1,304 @@
+{
+	"info": {
+		"_postman_id": "50a53819-8fa6-46b3-ab50-3b3c3bcd0f19",
+		"name": "FCFS API V1",
+		"description": "General requests possible with FCFS API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"userToken\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"charliemurphy\",\n    \"password\": \"ediediekdoi12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}auth/login",
+							"host": [
+								"{{base_url}}auth"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Successful login provides the user with a token for use with protected routes. All fields are required."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// pm.environment.set(\"userToken\", \"\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}auth/logout",
+							"host": [
+								"{{base_url}}auth"
+							],
+							"path": [
+								"logout"
+							]
+						},
+						"description": "Removes active cookie associated with the active user account."
+					},
+					"response": []
+				}
+			],
+			"description": "Methods for token management for registered users."
+		},
+		{
+			"name": "Retrieve Campground Data",
+			"item": [
+				{
+					"name": "Get All Campgrounds",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}campgrounds",
+							"host": [
+								"{{base_url}}campgrounds"
+							]
+						},
+						"description": "Fetch all campgrounds."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Campgrounds Within a Radius",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}campgrounds/36116/150",
+							"host": [
+								"{{base_url}}campgrounds"
+							],
+							"path": [
+								"36116",
+								"150"
+							]
+						},
+						"description": "Fetch all campgrounds within a radius from the any zipcode. Replace '36116' with the request zipcode and '150' with the requested radius."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Campgrounds By State",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}al",
+							"host": [
+								"{{base_url}}al"
+							]
+						},
+						"description": "Fetch all campgrounds within a specific state. Replace 'al' with any state's 2 letter identifier."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Campgrounds By Park",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}al/test-park-1",
+							"host": [
+								"{{base_url}}al"
+							],
+							"path": [
+								"test-park-1"
+							]
+						},
+						"description": "Fetch all campgrounds within a specific campground. The state's 2 letter identifier is required along the lower-case slug of the park's name."
+					},
+					"response": []
+				}
+			],
+			"description": "Fetch campground data. Access to all users and visitors."
+		},
+		{
+			"name": "Edit Campground Data",
+			"item": [
+				{
+					"name": "Add Campground",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "111111111111111",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Campground 1\",\n    \"park\": \"Test Park 1\",\n    \"state\": \"al\",\n    \"address\": \"448 1st Street, Montgomery, AL. 36117\",\n    \"fee\": 20,\n    \"toilet\": true,\n    \"water\": false,\n    \"yearRound\": true,\n    \"vote\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}al",
+							"host": [
+								"{{base_url}}al"
+							]
+						},
+						"description": "Allows registered users to add a campground. All fields are required except 'vote'. Should a user want to vote, use 1 or -1 to indicate positive or negative review."
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Campground",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "111111111111111",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"Birmingham, Al. 35005\",\n    \"fee\": 0,\n    \"yearRound\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}al/test-park-1/test-campground-1",
+							"host": [
+								"{{base_url}}al"
+							],
+							"path": [
+								"test-park-1",
+								"test-campground-1"
+							]
+						},
+						"description": "Allows registered contributors to edit an existing campground. Location can be edited by including an 'address' field or a 'coordinates' field. Examples:\n\n\"address\": \"Burgess St, Auburn, Al. 36801\"\n\n\"coordinates'\": {\"lat\": 12.001, \"lon\": 112.000}"
+					},
+					"response": []
+				},
+				{
+					"name": "Up Vote Campground",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "111111111111111",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}al/test-park-1/test-campground-1/good",
+							"host": [
+								"{{base_url}}al"
+							],
+							"path": [
+								"test-park-1",
+								"test-campground-1",
+								"good"
+							]
+						},
+						"description": "Provide a positive review of a campground."
+					},
+					"response": []
+				},
+				{
+					"name": "Down Vote Campground",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "111111111111111",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}al/test-park-1/test-campground-1/bad",
+							"host": [
+								"{{base_url}}al"
+							],
+							"path": [
+								"test-park-1",
+								"test-campground-1",
+								"bad"
+							]
+						},
+						"description": "Provide a negative review of a campground."
+					},
+					"response": []
+				}
+			],
+			"description": "All routes within this section require authentication using the provided bearer token obtained through login. Registered users must contribute a campground or vote before being able to edit a campground."
+		}
+	]
+}

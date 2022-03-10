@@ -24,7 +24,6 @@
   - [ ] display campground information
   - [ ] vote on campground
     - [ ] authenticated users can update
-- [ ] API Documentation Page
 - [ ] Security
   - [ ] Prevent XSS using domPurify
 - [ ] State Page
@@ -45,6 +44,7 @@
     - [ ] dropdown list all parks
       - [ ] click to go to specific park
   - [ ] find within a radius of your current location
+- [ ] API Documentation Page
 
 ## Done ✓
 
