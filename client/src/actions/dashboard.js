@@ -53,3 +53,14 @@ export const updatePassword =
       dispatch(setAlert(err.response.data.error, 'danger'));
     }
   };
+
+export const submitCampground = campData => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify(campData);
+  console.log(campData);
+};

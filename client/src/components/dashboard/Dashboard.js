@@ -1,18 +1,19 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateDetails, updatePassword } from '../../actions/dashboard';
+import {
+  updateDetails,
+  updatePassword,
+  submitCampground,
+} from '../../actions/dashboard';
 import { setAlert } from '../../actions/alert';
 import Spinner from '../layout/Spinner';
+import UpdateDetailsForm from './UpdateDetailsForm';
+import UpdatePasswordForm from './UpdatePasswordForm';
+import SubmitCampgroundForm from './SubmitCampgroundForm';
 
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
   const [displayForm, setDisplayForm] = useState(<div></div>);
-
-  const user = useSelector(state => state.auth.user);
-  useEffect(() => {
-    setUserData(user);
-  }, [user]);
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,10 +21,16 @@ const Dashboard = () => {
     currentPassword: '',
     campgroundName: '',
     parkName: '',
+    stateIdentifier: '',
+    streetAddress: '',
+    zipCode: '',
+    city: '',
+    fee: '0',
+    toilet: 'false',
+    water: 'false',
+    yearRound: 'false',
+    vote: '',
   });
-
-  const dispatch = useDispatch();
-
   const {
     name,
     email,
@@ -31,10 +38,89 @@ const Dashboard = () => {
     currentPassword,
     campgroundName,
     parkName,
+    stateIdentifier,
+    streetAddress,
+    zipCode,
+    city,
+    fee,
+    toilet,
+    water,
+    yearRound,
+    vote,
   } = formData;
 
-  const onChange = e =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const clearDisplayAndForm = () => {
+    setDisplayForm(<div></div>);
+    setFormData({
+      name: '',
+      email: '',
+      newPassword: '',
+      currentPassword: '',
+      campgroundName: '',
+      parkName: '',
+      stateIdentifier: '',
+      streetAddress: '',
+      zipCode: '',
+      city: '',
+      fee: '',
+      toilet: '',
+      water: '',
+      yearRound: '',
+      vote: '',
+    });
+  };
+
+  const user = useSelector(state => state.auth.user);
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
+
+  const formArea = useRef();
+  useEffect(() => {
+    const clearDisplayForm = e => {
+      if (!formArea.current.contains(e.target)) {
+        setDisplayForm(<div></div>);
+        setFormData({
+          name: '',
+          email: '',
+          newPassword: '',
+          currentPassword: '',
+          campgroundName: '',
+          parkName: '',
+          stateIdentifier: '',
+          streetAddress: '',
+          zipCode: '',
+          city: '',
+          fee: '',
+          toilet: false,
+          water: false,
+          yearRound: false,
+          vote: '',
+        });
+      }
+    };
+    document.body.addEventListener('click', clearDisplayForm);
+
+    return () => {
+      document.body.removeEventListener('click', clearDisplayForm);
+    };
+  }, []);
+
+  const dispatch = useDispatch();
+
+  // FIXME: setFormData not consistent?
+  const onChange = e => {
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
+    let tempFormData = formData;
+    tempFormData[e.target.name] = e.target.value;
+    return tempFormData;
+  };
+
+  const checkboxChange = e => {
+    let tempFormData = formData;
+    tempFormData[e.target.name] = e.target.checked;
+    return tempFormData;
+  };
 
   const onSubmitDetails = async e => {
     e.preventDefault();
@@ -42,49 +128,46 @@ const Dashboard = () => {
       dispatch(setAlert('Both name and email cannot be empty.', 'danger'));
     } else {
       dispatch(updateDetails(name, email));
-      setDisplayForm(<div></div>);
+      clearDisplayAndForm();
     }
   };
 
   const onSubmitPassword = async e => {
     e.preventDefault();
     dispatch(updatePassword(newPassword, currentPassword));
-    setDisplayForm(<div></div>);
+    clearDisplayAndForm();
   };
 
   const onSubmitCampground = async e => {
     e.preventDefault();
+    if (stateIdentifier.length === 0) {
+      console.log('select a state');
+    }
+    let newCamp = {
+      name: campgroundName,
+      park: parkName,
+      state: stateIdentifier.toLocaleLowerCase(),
+      address:
+        streetAddress + ' ' + city + ' ' + stateIdentifier + ' ' + zipCode,
+      fee: fee,
+      toilet: toilet,
+      water: water,
+      yearRound: yearRound,
+    };
+
+    if (vote.length > 0) {
+      newCamp.vote = vote;
+    }
     console.log('add campground');
-    setDisplayForm(<div></div>);
+    // dispatch(submitCampground(newCamp));
+    clearDisplayAndForm();
   };
 
   const updateDetailsBtn = async e => {
     e.preventDefault();
     setDisplayForm(
       <form onSubmit={onSubmitDetails} className='form'>
-        <div className='form-group'>
-          <input
-            type='text'
-            placeholder='Name'
-            name='name'
-            value={name}
-            onChange={onChange}
-          />
-        </div>
-        <div className='form-group'>
-          <input
-            type='email'
-            placeholder='Email'
-            name='email'
-            value={email}
-            onChange={onChange}
-          />
-        </div>
-        <input
-          type='submit'
-          value='Update User Details'
-          className='btn btn-primary'
-        />
+        {UpdateDetailsForm(onChange)}
       </form>
     );
   };
@@ -93,33 +176,7 @@ const Dashboard = () => {
     e.preventDefault();
     setDisplayForm(
       <form onSubmit={onSubmitPassword} className='form'>
-        <div className='form-group'>
-          <input
-            type='password'
-            placeholder='New Password'
-            minLength='7'
-            name='newPassword'
-            value={newPassword}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <div className='form-group'>
-          <input
-            type='password'
-            placeholder='Current Password'
-            minLength='7'
-            name='currentPassword'
-            value={currentPassword}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <input
-          type='submit'
-          value='Update Password'
-          className='btn btn-primary'
-        />
+        {UpdatePasswordForm(onChange)}
       </form>
     );
   };
@@ -128,31 +185,7 @@ const Dashboard = () => {
     e.preventDefault();
     setDisplayForm(
       <form onSubmit={onSubmitCampground} className='form'>
-        <div className='form-group'>
-          <input
-            type='text'
-            placeholder="Campground's Name"
-            name='campgroundName'
-            value={campgroundName}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <div className='form-group'>
-          <input
-            type='text'
-            placeholder="Park's Name"
-            name='parkName'
-            value={parkName}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <input
-          type='submit'
-          value='Submit Campground'
-          className='btn btn-primary'
-        />
+        {SubmitCampgroundForm(onChange, checkboxChange)}
       </form>
     );
   };
@@ -196,8 +229,7 @@ const Dashboard = () => {
               </ul>
             </div>
           </div>
-          <div className='campground-amenities bg-dark pg-2'>
-            {/* <div ref={formRef} className='campground-amenities bg-dark pg-2'> */}
+          <div ref={formArea} className='campground-amenities bg-dark pg-2'>
             <div className='amenities'>
               <ul>
                 <li>

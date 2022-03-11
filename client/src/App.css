@@ -464,6 +464,29 @@ section:first-of-type {
   background: #aaa8a8;
 }
 
+.side-by-side {
+  display: flex;
+  flex-direction: row;
+}
+
+input[type='checkbox'] {
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  transform: scale(2);
+  accent-color: #0093f5;
+}
+
+.checkboxtext {
+  font-size: 140%;
+  padding-left: 15px;
+  margin-left: 25px;
+  margin-right: 25px;
+  text-indent: -15px;
+}
+
 /* Mobile Styles */
 @media (max-width: 700px) {
   .container {
