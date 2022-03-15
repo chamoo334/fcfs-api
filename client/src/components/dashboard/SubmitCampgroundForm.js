@@ -60,6 +60,7 @@ const SubmitCampgroundForm = (genChangeFunc, checkChangeFunc) => {
           type='text'
           placeholder="Campground's Name"
           name='campgroundName'
+          // value={campground}
           onChange={genChangeFunc}
           required
         />
@@ -102,7 +103,9 @@ const SubmitCampgroundForm = (genChangeFunc, checkChangeFunc) => {
           <select name='stateIdentifier' onChange={genChangeFunc} required>
             <option value=''>{''}</option>
             {states.map(state => (
-              <option value={state}>{state}</option>
+              <option value={state} key={state}>
+                {state}
+              </option>
             ))}
           </select>
         </div>

@@ -487,6 +487,12 @@ input[type='checkbox'] {
   text-indent: -15px;
 }
 
+.clickableStatesMain {
+  width: 900px;
+  height: 525px;
+  border: none;
+}
+
 /* Mobile Styles */
 @media (max-width: 700px) {
   .container {

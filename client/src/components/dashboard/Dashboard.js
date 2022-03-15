@@ -140,27 +140,31 @@ const Dashboard = () => {
 
   const onSubmitCampground = async e => {
     e.preventDefault();
-    if (stateIdentifier.length === 0) {
-      console.log('select a state');
-    }
+
     let newCamp = {
-      name: campgroundName,
-      park: parkName,
-      state: stateIdentifier.toLocaleLowerCase(),
+      name: formData.campgroundName,
+      park: formData.parkName,
+      state: formData.stateIdentifier.toLocaleLowerCase(),
       address:
-        streetAddress + ' ' + city + ' ' + stateIdentifier + ' ' + zipCode,
-      fee: fee,
-      toilet: toilet,
-      water: water,
-      yearRound: yearRound,
+        formData.streetAddress +
+        ' ' +
+        formData.city +
+        ' ' +
+        formData.stateIdentifier +
+        ' ' +
+        formData.zipCode,
+      fee: formData.fee,
+      toilet: formData.toilet === true,
+      water: formData.water === true,
+      yearRound: formData.yearRound === true,
     };
 
-    if (vote.length > 0) {
-      newCamp.vote = vote;
+    if (formData.vote.length > 0) {
+      newCamp.vote = formData.vote;
     }
-    console.log('add campground');
-    // dispatch(submitCampground(newCamp));
-    clearDisplayAndForm();
+
+    dispatch(submitCampground(newCamp));
+    // clearDisplayAndForm();
   };
 
   const updateDetailsBtn = async e => {
@@ -185,7 +189,15 @@ const Dashboard = () => {
     e.preventDefault();
     setDisplayForm(
       <form onSubmit={onSubmitCampground} className='form'>
-        {SubmitCampgroundForm(onChange, checkboxChange)}
+        {SubmitCampgroundForm(
+          onChange,
+          checkboxChange,
+          campgroundName,
+          parkName,
+          streetAddress,
+          city,
+          zipCode
+        )}
       </form>
     );
   };

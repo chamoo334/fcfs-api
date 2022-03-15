@@ -8,13 +8,7 @@ import {
   SUBMIT_CAMPGROUND_FAIL,
 } from '../actions/constants';
 
-const initialState = {
-  token: localStorage.getItem('token'),
-  isAuthenticated: false,
-  isConfirmed: false,
-  loading: false,
-  user: null,
-};
+const initialState = {};
 
 export default function (state = initialState, action) {
   const { type, payload } = action;

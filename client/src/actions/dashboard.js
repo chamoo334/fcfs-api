@@ -62,5 +62,11 @@ export const submitCampground = campData => async dispatch => {
   };
 
   const body = JSON.stringify(campData);
-  console.log(campData);
+
+  try {
+    await axios.post(`/api/v1/${campData.state}`, body, config);
+    dispatch(setAlert('Campground Added!', 'success'));
+  } catch (err) {
+    dispatch(setAlert(err.response.data.error, 'danger'));
+  }
 };
