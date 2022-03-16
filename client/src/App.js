@@ -19,6 +19,7 @@ import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
 
 import './App.css';
+import Park from './components/camps/Park';
 
 const App = () => {
   useEffect(() => {
@@ -48,6 +49,7 @@ const App = () => {
           />
           <Route exact path='/confirmemail' element={<ConfirmEmail />} />
           <Route exact path='/states' element={<States />} />
+          <Route exact path='/park/:parkSlug' element={<Park />} />
           <Route exact path='/apidocs' element={<Api />} />
         </Routes>
       </Router>
