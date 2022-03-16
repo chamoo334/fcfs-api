@@ -8,6 +8,8 @@ import Register from './components/auth/Register';
 import ResetPassword from './components/auth/ResetPassword';
 import ConfirmEmail from './components/auth/ConfirmEmail';
 import States from './components/camps/States';
+import Park from './components/camps/Park';
+import Campground from './components/camps/Campground';
 import Api from './components/apidoc/Api';
 
 import Alert from './components/layout/Alert';
@@ -19,7 +21,6 @@ import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
 
 import './App.css';
-import Park from './components/camps/Park';
 
 const App = () => {
   useEffect(() => {
@@ -50,6 +51,8 @@ const App = () => {
           <Route exact path='/confirmemail' element={<ConfirmEmail />} />
           <Route exact path='/states' element={<States />} />
           <Route exact path='/park/:parkSlug' element={<Park />} />
+          <Route exact path='/camp/:campSlug' element={<Campground />} />
+
           <Route exact path='/apidocs' element={<Api />} />
         </Routes>
       </Router>

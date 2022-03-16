@@ -1,20 +1,19 @@
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 import { setAlert } from './alert';
 import {
   GET_STATE_PARKS_SUCCESS,
   GET_STATE_PARKS_FAIL,
+  REMOVE_STATE_PARKS_SUCCESS,
+  REMOVE_STATE_PARKS_FAIL,
   GET_PARK_CAMPS_SUCCESS,
   GET_PARK_CAMPS_FAIL,
-  TESTING,
+  REMOVE_PARK_CAMPS_SUCCESS,
+  REMOVE_PARK_CAMPS_FAIL,
+  GET_CAMPGROUND_SUCCESS,
+  GET_CAMPGROUND_FAIL,
+  REMOVE_CAMPGROUND_SUCCESS,
+  REMOVE_CAMPGROUND_FAIL,
 } from './constants';
-
-// const dispatchThenRoute = (myAction, myPath) => {
-//   return dispatch => {
-//     dispatch(myAction);
-//     browserHistory.push(myPath);
-//   };
-// };
 
 export const getStateParks = stateID => async dispatch => {
   try {
@@ -27,30 +26,59 @@ export const getStateParks = stateID => async dispatch => {
   }
 };
 
-export const getParkCamps = stateID => async dispatch => {
+export const removeStateParks = navigate => async dispatch => {
   try {
-    const res = await axios.get(`/api/v1/campgrounds`);
-    console.log(res);
-    dispatch({ type: TESTING });
+    dispatch({ type: REMOVE_STATE_PARKS_SUCCESS });
+    navigate('/states');
   } catch (err) {
     dispatch(setAlert(err.response.data.error, 'danger'));
-    dispatch({ type: TESTING });
+    dispatch({ type: REMOVE_STATE_PARKS_FAIL });
   }
 };
 
-// export const getParkCamps = parkSlug => async dispatch => {
-//   try {
-//     const state = useSelector(state => state.campgrounds.stateName);
-//     console.log(state);
-//     const res = await axios.get(`/api/v1/${state}/${parkSlug}`);
-//     const load = { park: parkName, data: res.data.data };
-//     //   dispatch({ type: GET_PARK_CAMPS_SUCCESS, payload: load });
-//   } catch (err) {
-//     dispatch(setAlert(err.response.data.error, 'danger'));
-//     dispatch({ type: GET_PARK_CAMPS_FAIL });
-//   }
-// };
+export const getParkCamps =
+  (state, pName, pSlug, navigate) => async dispatch => {
+    try {
+      const res = await axios.get(`/api/v1/${state}/${pSlug}`);
+      const load = { park: pName, data: res.data.data };
+      dispatch({ type: GET_PARK_CAMPS_SUCCESS, payload: load });
+      navigate(`/park/${pSlug}`);
+    } catch (err) {
+      dispatch(setAlert(err.response.data.error, 'danger'));
+      dispatch({ type: GET_PARK_CAMPS_FAIL });
+    }
+  };
 
-export const getCamps = () => dispatch => {
-  return useSelector(state => state.campgrounds.parkData);
+export const removeParkCamps = navigate => async dispatch => {
+  try {
+    dispatch({ type: REMOVE_PARK_CAMPS_SUCCESS });
+    navigate('/states');
+  } catch (err) {
+    dispatch(setAlert(err.response.data.error, 'danger'));
+    dispatch({ type: REMOVE_PARK_CAMPS_FAIL });
+  }
+};
+
+export const getCampground =
+  (state, pSlug, cName, cSlug, navigate) => async dispatch => {
+    try {
+      console.log('getCampground', state, pSlug, cName, cSlug);
+      const res = await axios.get(`/api/v1/${state}/${pSlug}/${cSlug}`);
+      const load = { campground: cName, data: res.data.data };
+      dispatch({ type: GET_CAMPGROUND_SUCCESS, payload: load });
+      navigate(`/camp/${cSlug}`);
+    } catch (err) {
+      dispatch(setAlert(err.response.data.error, 'danger'));
+      dispatch({ type: GET_CAMPGROUND_FAIL });
+    }
+  };
+
+export const removeCampground = navigate => async dispatch => {
+  try {
+    dispatch({ type: REMOVE_CAMPGROUND_SUCCESS });
+    navigate('/states');
+  } catch (err) {
+    dispatch(setAlert(err.response.data.error, 'danger'));
+    dispatch({ type: REMOVE_CAMPGROUND_FAIL });
+  }
 };

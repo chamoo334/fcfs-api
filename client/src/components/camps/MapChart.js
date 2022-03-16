@@ -10,7 +10,7 @@ import {
 import allStates from './data/allstates';
 import { useDispatch, useSelector } from 'react-redux';
 import { getStateParks, getParkCamps } from '../../actions/campgrounds';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const geoUrl = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
 
 const offsets = {
@@ -27,15 +27,38 @@ const offsets = {
 
 const MapChart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [parksData, setParksData] = useState([]);
   const [showParks, setShowParks] = useState(false);
   const [clickedState, setClickedState] = useState('');
+  const [clickedID, setClickedID] = useState('');
 
-  const setPark = (pName, pSlug) => async e => {
-    // await dispatch(getStateParks(identifier));
-    await dispatch(getParkCamps(pSlug));
+  const handleSubmit = (pName, pSlug) => e => {
+    e.preventDefault();
+    dispatch(getParkCamps(clickedID, pName, pSlug, navigate));
+  };
 
-    console.log(pName);
+  const parks = useSelector(state => state.campgrounds.stateData);
+  const stateID = useSelector(state => state.campgrounds.stateName);
+  useEffect(() => {
+    setParksData(parks);
+
+    if (parks.length > 0) {
+      const identifier = stateID.toUpperCase();
+      const cur = allStates.find(s => s.id === identifier);
+      setClickedState(cur.fullName);
+      setClickedID(stateID);
+      setShowParks(true);
+    }
+  }, [parks, stateID]);
+
+  const stateNameClick = (geoName, geoID) => async e => {
+    const cur = allStates.find(s => s.val === geoID);
+    const identifier = cur.id.toLowerCase();
+    await dispatch(getStateParks(identifier));
+    setClickedState(geoName);
+    setClickedID(identifier);
+    setShowParks(true);
   };
 
   const Results = () => {
@@ -44,33 +67,21 @@ const MapChart = () => {
         <h2>{clickedState}</h2>
         <ul>
           {parksData.map(park => (
-            <h3>
-              <Link
-                to={`/park/${park.slug}`}
-                state={{ parkName: park.name }}
+            <form
+              key={park.slug}
+              className='form'
+              onSubmit={handleSubmit(park.name, park.slug)}>
+              <input
+                type='submit'
+                value={park.name}
                 className='btn'
-                onClick={setPark(park.name, park.slug)}>
-                {' '}
-                {park.name}
-              </Link>
-            </h3>
+                style={{ fontSize: '18px' }}
+              />
+            </form>
           ))}
         </ul>
       </div>
     );
-  };
-
-  const parks = useSelector(state => state.campgrounds.stateData);
-  useEffect(() => {
-    setParksData(parks);
-  }, [parks]);
-
-  const stateNameClick = (geoName, geoID) => async e => {
-    const cur = allStates.find(s => s.val === geoID);
-    const identifier = cur.id.toLowerCase();
-    await dispatch(getStateParks(identifier));
-    setClickedState(geoName);
-    setShowParks(true);
   };
 
   return (
@@ -100,7 +111,14 @@ const MapChart = () => {
                       centroid[0] < -67 &&
                       (Object.keys(offsets).indexOf(cur.id) === -1 ? (
                         <Marker coordinates={centroid}>
-                          <text y='2' fontSize={14} textAnchor='middle'>
+                          <text
+                            y='2'
+                            fontSize={14}
+                            textAnchor='middle'
+                            onClick={stateNameClick(
+                              geo.properties.name,
+                              geo.id
+                            )}>
                             {cur.id}
                           </text>
                         </Marker>
@@ -109,7 +127,14 @@ const MapChart = () => {
                           subject={centroid}
                           dx={offsets[cur.id][0]}
                           dy={offsets[cur.id][1]}>
-                          <text x={4} fontSize={14} alignmentBaseline='middle'>
+                          <text
+                            x={4}
+                            fontSize={14}
+                            alignmentBaseline='middle'
+                            onClick={stateNameClick(
+                              geo.properties.name,
+                              geo.id
+                            )}>
                             {cur.id}
                           </text>
                         </Annotation>
