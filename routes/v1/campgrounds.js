@@ -22,6 +22,7 @@ const Campground = require('../../models/Campground');
 const Park = require('../../models/Park');
 
 router.route('/photo/:photoslug').get(getPhoto);
+router.route('/parks/:state').get(advanceQuery(Park), getParksState);
 
 router.route('/campgrounds').get(advanceQuery(Campground), getCampgrounds);
 router
@@ -49,8 +50,5 @@ router
   .route('/:state')
   .get(advanceQuery(Campground), getState)
   .post(protect, authorize('user', 'contributor', 'admin'), postCampground);
-router
-  .route('/parks/:state')
-  .get(advanceQuery(Park, null, { fee: 'asc' }), getParksState);
 
 module.exports = router;

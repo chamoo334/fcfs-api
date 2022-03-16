@@ -22,7 +22,6 @@ exports.getPhoto = asyncHandler(async (req, res, next) => {
 
   const imgType = imgPath.substring(imgPath.length - 3);
   const cType = `image/${imgType}`;
-  console.log(cType);
 
   if (!fs.existsSync(`${options.root}/${imgPath}`)) {
     return next(
