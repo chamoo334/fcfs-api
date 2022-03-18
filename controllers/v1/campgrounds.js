@@ -151,7 +151,7 @@ exports.postCampground = asyncHandler(async (req, res, next) => {
     { new: true, runValidators: false }
   );
 
-  upgradeUser(req, res, newCampground, true);
+  upgradeUser(req, res, newCampground, true, null, 201);
 });
 
 //@desc     Update data of a spceific campground
@@ -370,7 +370,8 @@ const upgradeUser = async (
   res,
   resData,
   isCamp = null,
-  isComment = null
+  isComment = null,
+  statusCode = 200
 ) => {
   if (req.user.role === 'user') {
     await User.findByIdAndUpdate(
@@ -396,7 +397,7 @@ const upgradeUser = async (
     );
   }
 
-  res.status(200).json({
+  res.status(statusCode).json({
     success: true,
     resData,
   });

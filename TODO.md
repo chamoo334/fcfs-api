@@ -26,6 +26,7 @@
   - [ ] public profile editing
   - [ ] protected admin features
   - [ ] provide option to include coordinates when submitting campground
+- [ ] Public Profile Page
 - [ ] All States Page
   - [ ] find within a radius of your current location
 - [ ] Park Page
@@ -140,7 +141,7 @@
   - [x] update campground
   - [x] protected
 
-## Consider
+## Possible Changes / Improvements
 
 ### - Backend / Server
 
@@ -153,3 +154,5 @@
 ### - Frontend / Client
 
 - [ ] Universal state management function for clearing based on location
+
+### - General
