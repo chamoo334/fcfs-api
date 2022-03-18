@@ -98,8 +98,6 @@ Code: `200 OK`
 }
 ```
 
-_Note:_ Exact error message and code will depend on the specific issue.
-
 ### 2. Get Campgrounds Within a Radius
 
 Fetch all campgrounds within a radius from the any zipcode.
@@ -109,9 +107,10 @@ Fetch all campgrounds within a radius from the any zipcode.
 ```bash
 Method: GET
 Type: application/json
-URL:
+URL: /campgrounds/:zipcode/:radius
 ```
 
+<sub>Radius is assumed to be miles</sub>
 **_Success Response:_**
 
 Code: `200 OK`
@@ -346,8 +345,8 @@ Code: `401 Unauthorized`
 
 ## Closed Endpoints
 
-Require a valid token or cookie to be included in the header of the
-request. A token or cookie can be acquired from the Login view above.
+Require a valid token to be included in the header of the
+request. A token can be acquired from via [Login](#6-login).
 
 ### 1. Add Campground
 
