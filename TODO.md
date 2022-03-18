@@ -34,14 +34,13 @@
 - [ ] Campground Page
   - [ ] provide option to include coordinates
   - [ ] protected delete option for admin only
+- [ ] API Documentation Page
+  - [ ] Side navigation to select different versions
+  - [ ] formating with markdown-to-jsx ?
 - [ ] Photo integration
 - [ ] Comments Integration
 
 ## In Progress
-
-### - Frontend / Client
-
-- [ ] API Documentation Page
 
 ## Done ✓
 
@@ -140,6 +139,8 @@
   - [x] vote on campground
   - [x] update campground
   - [x] protected
+- [ ] API Documentation Page
+  - [x] MVP data
 
 ## Possible Changes / Improvements
 
