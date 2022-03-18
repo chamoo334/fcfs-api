@@ -8,37 +8,38 @@
 
 ### - Backend / Server
 
-- [ ] middleware/xssCleanIn.js - > find xss-clean alternative
-- [ ] controllers/v1/auth.js -> authLogout blacklist for tokens alternative
-- [ ] models/Campground -> CampgroundSchema.pre('findOneAndUpdate') -> cache userID if attempting to alter prohibited field
-- [ ] models/Photo.js -> complete integration
-- [ ] routes/v1/auth.js -> reduce try/catch
+- [ ] models/Photo.js -> testing & integration
+- [ ] comments -> db model, testing, & integration
+- [ ] public profile -> db, testing, & integration
 
 ### - Frontend / Client
 
-- [ ] Campground Page
-  - [ ] display campground information
-  - [ ] vote on campground
-    - [ ] authenticated users can update
 - [ ] Security
   - [ ] Prevent XSS using domPurify
-- [ ] Individual State Page
-  - [ ] list all parks
-  - [ ] click to view all parks
-  - [ ] click to go to specific park
-- [ ] Individual user's public profile
+- [ ] Direct paths:
+  - [ ] Public profiles
+  - [ ] Individual state
+    - [ ] list all parks
+      - [ ] list all campgrounds
+        - [ ] direct link to campground's page
+- [ ] Dashboard / User Page
+  - [ ] public profile editing
+  - [ ] protected admin features
+  - [ ] provide option to include coordinates when submitting campground
+- [ ] All States Page
+  - [ ] find within a radius of your current location
+- [ ] Park Page
+  - [ ] protected delete option for admin only
+- [ ] Campground Page
+  - [ ] provide option to include coordinates
+  - [ ] protected delete option for admin only
+- [ ] Photo integration
+- [ ] Comments Integration
 
 ## In Progress
 
 ### - Frontend / Client
 
-- [ ] Campgrounds Page
-  - [ ] find within a radius of your current location
-  - [ ]
-- [ ] Park Page
-  - [x] list all campgrounds
-  - [ ] click to go to specific campground
-    - [ ] private route
 - [ ] API Documentation Page
 
 ## Done ✓
@@ -121,7 +122,7 @@
     - [x] Redirect to dashboard
   - [x] reset Password
     - [x] Redirect to login
-- [x] User Page
+- [ ] User Page
   - [x] Add campground
   - [x] Update details
   - [x] Update password
@@ -129,10 +130,26 @@
   - [x] View by state clickable image
     - [x] dropdown list all parks
       - [x] click to go to specific park
+- [ ] Park Page
+  - [x] list all campgrounds
+  - [x] click to go to specific campground
+    - [x] private route
+- [ ] Campground Page
+  - [x] display campground information
+  - [x] vote on campground
+  - [x] update campground
+  - [x] protected
 
 ## Consider
 
-### - [ ] Backend / Server
+### - Backend / Server
 
 - [ ] Security
   - [ ] Prevent cross site scripting xss-clean vs xss
+  - [ ] models/Campground -> CampgroundSchema.pre('findOneAndUpdate') -> cache userID if attempting to alter prohibited field
+    - [ ] possibly remove privileges
+  - [ ] controllers/v1/auth.js -> authLogout blacklist for tokens or alternative
+
+### - Frontend / Client
+
+- [ ] Universal state management function for clearing based on location

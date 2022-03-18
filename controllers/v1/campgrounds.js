@@ -183,6 +183,7 @@ exports.putCampground = asyncHandler(async (req, res, next) => {
   );
 
   upgradeUser(req, res, campground, true);
+  // res.sendStatus(200);
 });
 
 //@desc     Increase positive rating by 1 of specific campground

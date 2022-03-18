@@ -11,6 +11,12 @@ import {
   GET_CAMPGROUND_FAIL,
   REMOVE_CAMPGROUND_SUCCESS,
   REMOVE_CAMPGROUND_FAIL,
+  UPVOTE_CAMPGROUND_SUCCESS,
+  UPVOTE_CAMPGROUND_FAIL,
+  DOWNVOTE_CAMPGROUND_SUCCESS,
+  DOWNVOTE_CAMPGROUND_FAIL,
+  UPDATE_CAMPGROUND_SUCCESS,
+  UPDATE_CAMPGROUND_FAIL,
 } from '../actions/constants';
 
 const initialState = {
@@ -19,7 +25,7 @@ const initialState = {
   campgroundName: '',
   stateData: [],
   parkData: [],
-  campgroundData: [],
+  campgroundData: {},
   loading: false,
 };
 
@@ -60,8 +66,18 @@ export default function (state = initialState, action) {
       return {
         ...state,
         campgroundName: '',
-        campgroundData: [],
+        campgroundData: {},
       };
+    case UPDATE_CAMPGROUND_SUCCESS:
+    case UPVOTE_CAMPGROUND_SUCCESS:
+    case DOWNVOTE_CAMPGROUND_SUCCESS:
+      return {
+        ...state,
+        campgroundData: payload,
+      };
+    case UPDATE_CAMPGROUND_FAIL:
+    case DOWNVOTE_CAMPGROUND_FAIL:
+    case UPVOTE_CAMPGROUND_FAIL:
     case GET_STATE_PARKS_FAIL:
     case GET_PARK_CAMPS_FAIL:
     case GET_CAMPGROUND_FAIL:

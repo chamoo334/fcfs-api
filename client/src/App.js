@@ -51,8 +51,10 @@ const App = () => {
           <Route exact path='/confirmemail' element={<ConfirmEmail />} />
           <Route exact path='/states' element={<States />} />
           <Route exact path='/park/:parkSlug' element={<Park />} />
-          <Route exact path='/camp/:campSlug' element={<Campground />} />
-
+          <Route
+            path='/camp/:campSlug'
+            element={<PrivateRoute component={Campground} />}
+          />
           <Route exact path='/apidocs' element={<Api />} />
         </Routes>
       </Router>

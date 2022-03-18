@@ -13,6 +13,12 @@ import {
   GET_CAMPGROUND_FAIL,
   REMOVE_CAMPGROUND_SUCCESS,
   REMOVE_CAMPGROUND_FAIL,
+  UPVOTE_CAMPGROUND_SUCCESS,
+  UPVOTE_CAMPGROUND_FAIL,
+  DOWNVOTE_CAMPGROUND_SUCCESS,
+  DOWNVOTE_CAMPGROUND_FAIL,
+  UPDATE_CAMPGROUND_SUCCESS,
+  UPDATE_CAMPGROUND_FAIL,
 } from './constants';
 
 export const getStateParks = stateID => async dispatch => {
@@ -62,9 +68,8 @@ export const removeParkCamps = navigate => async dispatch => {
 export const getCampground =
   (state, pSlug, cName, cSlug, navigate) => async dispatch => {
     try {
-      console.log('getCampground', state, pSlug, cName, cSlug);
       const res = await axios.get(`/api/v1/${state}/${pSlug}/${cSlug}`);
-      const load = { campground: cName, data: res.data.data };
+      const load = { campground: cName, data: res.data.data[0] };
       dispatch({ type: GET_CAMPGROUND_SUCCESS, payload: load });
       navigate(`/camp/${cSlug}`);
     } catch (err) {
@@ -73,12 +78,55 @@ export const getCampground =
     }
   };
 
-export const removeCampground = navigate => async dispatch => {
+export const removeCampground = (navigate, parkSlug) => async dispatch => {
   try {
     dispatch({ type: REMOVE_CAMPGROUND_SUCCESS });
-    navigate('/states');
+    navigate(`/park/${parkSlug}`);
   } catch (err) {
     dispatch(setAlert(err.response.data.error, 'danger'));
     dispatch({ type: REMOVE_CAMPGROUND_FAIL });
   }
 };
+
+export const voteCampground = (state, pSlug, cSlug, up) => async dispatch => {
+  let url = `/api/v1/${state}/${pSlug}/${cSlug}/`;
+  let actReduce = null;
+  if (up) {
+    url += 'good';
+    actReduce = [UPVOTE_CAMPGROUND_SUCCESS, UPVOTE_CAMPGROUND_FAIL];
+  } else {
+    url += 'bad';
+    actReduce = [DOWNVOTE_CAMPGROUND_SUCCESS, DOWNVOTE_CAMPGROUND_FAIL];
+  }
+
+  try {
+    const res = await axios.put(url);
+    dispatch({ type: actReduce[0], payload: res.data.resData });
+  } catch (err) {
+    dispatch(setAlert(err.response.data.error, 'danger'));
+    dispatch({ type: actReduce[1] });
+  }
+};
+
+export const updateCampground =
+  (state, pSlug, cSlug, campData) => async dispatch => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const body = JSON.stringify(campData);
+
+    try {
+      const res = await axios.put(
+        `/api/v1/${state}/${pSlug}/${cSlug}`,
+        body,
+        config
+      );
+      dispatch({ type: UPDATE_CAMPGROUND_SUCCESS, payload: res.data.resData });
+    } catch (err) {
+      dispatch(setAlert(err.response.data.error, 'danger'));
+      dispatch({ type: UPDATE_CAMPGROUND_FAIL });
+    }
+  };

@@ -19,7 +19,6 @@ const Park = () => {
   const campNameClick = (campName, campSlug) => async e => {
     e.preventDefault();
     const parkSlug = stateParks.find(park => park.name === parkName).slug;
-    console.log('campNameClick', stateName, parkSlug, campName, campSlug);
     dispatch(getCampground(stateName, parkSlug, campName, campSlug, navigate));
   };
 
@@ -73,9 +72,6 @@ const Park = () => {
                 </li>
                 <li className='text-primary'>
                   Last Update: {camp.lastUpdate.substring(0, 10)}
-                </li>
-                <li className='text-primary'>
-                  Updated By: {camp.lastModifiedBy}
                 </li>
               </ul>
             </div>

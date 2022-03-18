@@ -78,25 +78,27 @@ const Dashboard = () => {
   const formArea = useRef();
   useEffect(() => {
     const clearDisplayForm = e => {
-      if (!formArea.current.contains(e.target)) {
-        setDisplayForm(<div></div>);
-        setFormData({
-          name: '',
-          email: '',
-          newPassword: '',
-          currentPassword: '',
-          campgroundName: '',
-          parkName: '',
-          stateIdentifier: '',
-          streetAddress: '',
-          zipCode: '',
-          city: '',
-          fee: '',
-          toilet: false,
-          water: false,
-          yearRound: false,
-          vote: '',
-        });
+      if (formArea.current !== null) {
+        if (!formArea.current.contains(e.target)) {
+          setDisplayForm(<div></div>);
+          setFormData({
+            name: '',
+            email: '',
+            newPassword: '',
+            currentPassword: '',
+            campgroundName: '',
+            parkName: '',
+            stateIdentifier: '',
+            streetAddress: '',
+            zipCode: '',
+            city: '',
+            fee: '',
+            toilet: false,
+            water: false,
+            yearRound: false,
+            vote: '',
+          });
+        }
       }
     };
     document.body.addEventListener('click', clearDisplayForm);
