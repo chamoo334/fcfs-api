@@ -5,7 +5,7 @@ const connectDB = require('./config/db');
 const errHandler = require('./middleware/error');
 const { cleanInput } = require('./middleware/xssCleanIn');
 const express = require('express');
-const dotenv = require('dotenv');
+require('dotenv').config();
 const morgan = require('morgan');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
@@ -17,7 +17,6 @@ const cors = require('cors'); //TODO: consider options for users and auth
 const path = require('path');
 
 // load env & connect database
-dotenv.config({ path: './config/config.env' });
 connectDB();
 
 const app = express();

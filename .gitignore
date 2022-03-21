@@ -106,3 +106,5 @@ dist
 # private data
 config/config.env
 config/temp.env
+server/config/config.env
+server/config/temp.env
