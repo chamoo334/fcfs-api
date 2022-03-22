@@ -47,7 +47,7 @@ export const updatePassword =
 
     const body = JSON.stringify({ newPassword, currentPassword });
     try {
-      await axios.put('/api/v1/auth/updatepassword', body, config);
+      await axios.put('/api/auth/updatepassword', body, config);
       dispatch(setAlert('Password updated!', 'success'));
     } catch (err) {
       dispatch(setAlert(err.response.data.error, 'danger'));

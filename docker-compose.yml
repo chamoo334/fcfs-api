@@ -1,33 +1,37 @@
 version: '3'
 
 services:
-  fcfs-api:
+  nginx:
+    depends_on:
+      - api
+      - client
     restart: always
     build:
-      context: ./server
       dockerfile: Dockerfile.dev
+      context: ./nginx
     container_name: fcfs_api_nginx
+    ports:
+      - '3050:80'
+
+  api:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
     volumes:
       - /app/node_modules
       - ./server:/app
-    ports:
-      - 5000:5000
+    container_name: fcfs_api_backend
+    env_file: ./.env
+
+  client:
+    restart: always
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
     environment:
-      NODE_ENV: ${NODE_ENV}
-      MONGO_URI: ${MONGO_URI}
-      GEOCODER_PROVIDER: ${GEOCODER_PROVIDER}
-      GEO_PROVIDER_API_KEY: ${GEO_PROVIDER_API_KEY}
-      FILE_UPLOAD_PATH: ${FILE_UPLOAD_PATH}
-      MAX_FILE_UPLOAD: ${MAX_FILE_UPLOAD}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRE: ${JWT_EXPIRE}
-      JWT_COOKIE_EXPIRE: ${JWT_COOKIE_EXPIR}
-      SMTP_HOST_D: ${SMTP_HOST_D}
-      SMTP_PORT_D: ${SMTP_PORT_D}
-      SMTP_EMAIL_D: ${SMTP_EMAIL_D}
-      SMTP_PASSWORD_D: ${SMTP_PASSWORD_D}
-      SMTP_SERVICE_P: ${SMTP_SERVICE_P}
-      SMTP_USER_P: ${SMTP_USER_P}
-      SMTP_PASSWORD_P: ${SMTP_PASSWORD_P}
-      FROM_EMAIL: ${FROM_EMAIL}
-      FROM_NAME: ${FROM_NAME}
+      - WDS_SOCKET_PORT=0
+    container_name: fcfs_api_frontend
+    depends_on:
+      - api

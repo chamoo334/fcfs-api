@@ -18,7 +18,7 @@ export const loadUser = () => async dispatch => {
   }
 
   try {
-    const res = await axios.get('/api/v1/auth/me');
+    const res = await axios.get('/api/auth/me');
     dispatch({ type: USER_LOADED, payload: res.data });
   } catch (err) {
     dispatch({ type: AUTH_ERROR });
@@ -37,7 +37,7 @@ export const register =
     const body = JSON.stringify({ name, email, password });
 
     try {
-      const res = await axios.post('/api/v1/auth/register', body, config);
+      const res = await axios.post('/api/auth/register', body, config);
       dispatch({ type: REGISTER_SUCCESS, payload: res.data });
     } catch (err) {
       dispatch(setAlert(err.response.data.error, 'danger'));
@@ -54,7 +54,7 @@ export const login = (name, password) => async dispatch => {
 
   const body = JSON.stringify({ name, password });
   try {
-    const res = await axios.post('/api/v1/auth/login', body, config);
+    const res = await axios.post('/api/auth/login', body, config);
     dispatch({ type: LOGIN_SUCCESS, payload: res.data });
     dispatch(loadUser());
   } catch (err) {
@@ -65,7 +65,7 @@ export const login = (name, password) => async dispatch => {
 
 export const logout = (name, password) => async dispatch => {
   try {
-    await axios.get('/api/v1/auth/logout');
+    await axios.get('/api/auth/logout');
     dispatch({ type: LOGOUT });
   } catch (err) {
     dispatch(setAlert(err.response.data.error, 'danger'));
@@ -81,7 +81,7 @@ export const forgotPassword = name => async dispatch => {
 
   const body = JSON.stringify({ name });
   try {
-    await axios.post('/api/v1/auth/forgotpassword', body, config);
+    await axios.post('/api/auth/forgotpassword', body, config);
     dispatch(
       setAlert(
         'A link to reset your password has been emailed to you!',
@@ -102,7 +102,7 @@ export const resetPassword = (password, resetToken) => async dispatch => {
 
   const body = JSON.stringify({ password });
   try {
-    await axios.put(`/api/v1/auth/resetpassword/${resetToken}`, body, config);
+    await axios.put(`/api/auth/resetpassword/${resetToken}`, body, config);
     dispatch(setAlert('Proceed to login with updated password!', 'success'));
   } catch (err) {
     dispatch(setAlert(err.response.data.error, 'danger'));
@@ -111,7 +111,7 @@ export const resetPassword = (password, resetToken) => async dispatch => {
 
 export const confirmEmail = confirmEmailToken => async dispatch => {
   try {
-    await axios.get(`/api/v1/auth/confirmemail?token=${confirmEmailToken}`);
+    await axios.get(`/api/auth/confirmemail?token=${confirmEmailToken}`);
     dispatch({ type: CONFIRM_EMAIL_SUCCESS });
     dispatch(setAlert('Email confirmed!', 'success'));
   } catch (err) {
