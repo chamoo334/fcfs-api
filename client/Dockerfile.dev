@@ -1,7 +1,6 @@
 FROM node:16.14.0-alpine
-WORKDIR '/app'
-ENV PATH /usr/src/app/node_modules/.bin:${PATH}
-COPY ./package.json ./
+WORKDIR /app
+COPY package.json .
 RUN npm install
 COPY . .
 CMD ["npm","start"]

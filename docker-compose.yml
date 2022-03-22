@@ -30,6 +30,10 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./client
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client/src:/app/src
     environment:
       - WDS_SOCKET_PORT=0
     container_name: fcfs_api_frontend
