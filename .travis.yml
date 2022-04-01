@@ -4,7 +4,15 @@ language: generic
 services:
   - docker
 
+# build test images
 before_install:
+  - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
+
+# run test images
+script:
+  - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
+
+after_success:
   # create env file & filter out PATH and DOCKER docker run --env-file .env
   - env | grep -vE "^(PATH=)" > .env
   # creating images
