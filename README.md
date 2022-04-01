@@ -1,6 +1,5 @@
 # First Come First Serve API V1
-
-Endpoints associated with FCFS API.
+## Endpoints associated with FCFS API.
 
 _Notes:<br> - all URL parameters are lowercase with - replacing all spaces. <br> - state parameters are the requested state's 2 letter indentifier_
 
