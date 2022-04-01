@@ -14,7 +14,7 @@ script:
 
 after_success:
   # create env file & filter out PATH and DOCKER docker run --env-file .env
-  - env | grep -vE "^(PATH=)" > .env
+  # - env | grep -vE "^(PATH=)" > .env
   # creating images
   - docker build -t $DOCKER_HUB_USER/fcfs-client ./client
   - docker build -t $DOCKER_HUB_USER/fcfs-nginx ./nginx
