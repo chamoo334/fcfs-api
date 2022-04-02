@@ -2,7 +2,6 @@ version: '3'
 services:
   client:
     image: 'diltfcfs/fcfs-client'
-    mem_limit: 128m
     hostname: client
   server:
     image: 'diltfcfs/fcfs-server'
