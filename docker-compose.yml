@@ -2,13 +2,14 @@ version: '3'
 services:
   client:
     image: 'diltfcfs/fcfs-client'
+    mem_limit: 128m
     hostname: client
   server:
     image: 'diltfcfs/fcfs-server'
     mem_limit: 128m
     hostname: api
     environment:
-      - NODE_ENV=$NODE_ENV
+      - NODE_ENV=production
       - MONGO_URI=$MONGO_URI
       - MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME
       - MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD
