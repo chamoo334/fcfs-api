@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    container_name: fcfs_api_nginx
+    ports:
+      - '3050:80'
+
+  api:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    container_name: fcfs_api_backend
+    env_file: ./.env
+
+  client:
+    restart: always
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client/src:/app/src
+    environment:
+      - WDS_SOCKET_PORT=0
+    container_name: fcfs_api_frontend
+    depends_on:
+      - api

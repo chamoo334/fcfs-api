@@ -13,8 +13,6 @@ script:
   - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
 
 after_success:
-  # create env file & filter out PATH and DOCKER docker run --env-file .env
-  # - env | grep -vE "^(PATH=)" > .env
   # creating images
   - docker build -t $DOCKER_HUB_USER/fcfs-client ./client
   - docker build -t $DOCKER_HUB_USER/fcfs-nginx ./nginx
@@ -25,3 +23,15 @@ after_success:
   - docker push $DOCKER_HUB_USER/fcfs-client
   - docker push $DOCKER_HUB_USER/fcfs-nginx
   - docker push $DOCKER_HUB_USER/fcfs-server
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-1
+  app: fcfs
+  env: Fcfs-env
+  bucket_name: fcfs-us-east-1
+  bucket_path: fcfs-multi-docker
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
