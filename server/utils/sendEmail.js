@@ -1,7 +1,11 @@
 const nodemailer = require('nodemailer');
+const AWS = require('aws-sdk');
 
 const sendEmail = async options => {
+  // configure AWS SDK
+
   let transporter;
+  let message;
 
   if (process.env.NODE_ENV === 'development') {
     transporter = nodemailer.createTransport({
@@ -12,22 +16,38 @@ const sendEmail = async options => {
         pass: process.env.SMTP_PASSWORD_D,
       },
     });
+
+    message = {
+      from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
+      to: options.email,
+      subject: options.subject,
+      text: options.message,
+    };
   } else {
+    // transporter = nodemailer.createTransport({
+    // service: process.env.SMTP_SERVICE_P,
+    // auth: {
+    //   user: process.env.SMTP_USER_P,
+    //   pass: process.env.SMTP_PASSWORD_P,
+    // },
+    // });
     transporter = nodemailer.createTransport({
-      service: process.env.SMTP_SERVICE_P,
+      host: process.env.SES_HOST,
+      port: 465,
+      secure: true,
       auth: {
-        user: process.env.SMTP_USER_P,
-        pass: process.env.SMTP_PASSWORD_P,
+        user: process.env.SES_ACCESS_USER,
+        pass: process.env.SSS_SECRET_KEY,
       },
     });
-  }
 
-  const message = {
-    from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-  };
+    message = {
+      from: process.env.FROM_EMAIL,
+      to: 'dilt.fcfs@gmail.com',
+      subject: options.subject,
+      text: options.message,
+    };
+  }
 
   await transporter.sendMail(message);
 };
