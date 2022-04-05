@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const AWS = require('aws-sdk');
+const aws = require('aws-sdk');
 
 function sesTest(emailTo, emailFrom) {
   console.log('sesTest:', emailFrom);
