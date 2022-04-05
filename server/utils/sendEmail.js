@@ -23,31 +23,45 @@ const sendEmail = async options => {
       subject: options.subject,
       text: options.message,
     };
+
+    await transporter.sendMail(message);
   } else {
-    // transporter = nodemailer.createTransport({
-    // service: process.env.SMTP_SERVICE_P,
-    // auth: {
-    //   user: process.env.SMTP_USER_P,
-    //   pass: process.env.SMTP_PASSWORD_P,
-    // },
-    // });
-    transporter = nodemailer.createTransport({
-      host: process.env.SES_HOST,
-      auth: {
-        user: process.env.SES_ACCESS_USER,
-        pass: process.env.SSS_SECRET_KEY,
-      },
-    });
-
-    message = {
-      from: process.env.FROM_EMAIL,
-      to: 'dilt.fcfs@gmail.com',
-      subject: options.subject,
-      text: options.message,
+    const SES_CONFIG = {
+      accessKeyId: process.env.SES_ACCESS_USER,
+      secretAccessKey: process.env.SES_SECRET_KEY,
+      region: process.env.SES_REGION,
     };
-  }
 
-  await transporter.sendMail(message);
+    const AWS_SES = new AWS.SES(SES_CONFIG);
+
+    // AWS.config.update({ region: process.env.SES_REGION });
+
+    var params = {
+      Destination: {
+        ToAddresses: ['chuckladuck91@gmail.com'],
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: 'UTF-8',
+            Data: 'HTML Testing',
+          },
+          Text: {
+            Charset: 'UTF-8',
+            Data: 'Testing SES email',
+          },
+        },
+        Subject: {
+          Charset: 'UTF-8',
+          Data: 'Test email',
+        },
+      },
+      Source: 'dilt.fcfs@gmail.com',
+      ReplyToAddresses: ['dilt.fcfs@gmail.com'],
+    };
+
+    await AWS_SES.sendEmail(params);
+  }
 };
 
 module.exports = sendEmail;
