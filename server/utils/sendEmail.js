@@ -1,30 +1,5 @@
 const nodemailer = require('nodemailer');
-const aws = require('aws-sdk');
-
-function sesTest(emailTo, emailFrom) {
-  console.log('sesTest:', emailFrom);
-  const ses = new aws.SES({
-    accessKeyId: process.env.SES_ACCESS_USER,
-    secretAccessKey: process.env.SES_SECRET_KEY,
-    region: process.env.SES_REGION,
-  });
-
-  var params = {
-    Destination: {
-      ToAddresses: [emailTo],
-    },
-    Message: {
-      Body: {
-        Text: { Data: 'This is a test email' },
-      },
-
-      Subject: { Data: 'From: ' + emailFrom },
-    },
-    Source: emailFrom,
-  };
-
-  return ses.sendEmail(params).promise();
-}
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 
 const sendEmail = async options => {
   // configure AWS SDK
@@ -51,13 +26,40 @@ const sendEmail = async options => {
 
     await transporter.sendMail(message);
   } else {
-    sesTest('chuckladuck91@gmail.com', process.env.SES_FROM_EMAIL)
-      .then(val => {
-        console.log('got this back', val);
-      })
-      .catch(err => {
-        console.log('There was an error!', err);
-      });
+    const REGION = 'us-east-1';
+    const sesClient = new SESClient({ region: REGION });
+    // const client = new SESClient({
+    //   accessKeyId: process.env.SES_ACCESS_USER,
+    //   secretAccessKey: process.env.SES_SECRET_KEY,
+    //   region: process.env.SES_REGION,
+    // });
+
+    const params = {
+      Destination: {
+        CcAddresses: ['dilt.fcfs@gmail.com'],
+        ToAddresses: ['chuckladuck91@gmail.com'],
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: 'UTF-8',
+            Data: 'HTML_FORMAT_BODY',
+          },
+          Text: {
+            Charset: 'UTF-8',
+            Data: 'Test SES Email',
+          },
+        },
+        Subject: {
+          Charset: 'UTF-8',
+          Data: 'Test Email Subject',
+        },
+      },
+      Source: 'dilt.fcfs@gmail.com', // SENDER_ADDRESS
+      ReplyToAddresses: ['dilt.fcfs@gmail.com'],
+    };
+
+    await sesClient.send(new SendEmailCommand(params));
   }
 };
 
