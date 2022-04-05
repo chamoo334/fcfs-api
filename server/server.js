@@ -15,11 +15,13 @@ const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors'); //TODO: consider options for users and auth
 const path = require('path');
+const cors = require('cors');
 
 // load env & connect database
 connectDB();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 

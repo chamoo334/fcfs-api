@@ -1,5 +1,30 @@
 const nodemailer = require('nodemailer');
-const aws = require('aws-sdk');
+const AWS = require('aws-sdk');
+
+function sesTest(emailTo, emailFrom) {
+  console.log('sesTest:', emailFrom);
+  const ses = new aws.SES({
+    accessKeyId: process.env.SES_ACCESS_USER,
+    secretAccessKey: process.env.SES_SECRET_KEY,
+    region: process.env.SES_REGION,
+  });
+
+  var params = {
+    Destination: {
+      ToAddresses: [emailTo],
+    },
+    Message: {
+      Body: {
+        Text: { Data: 'This is a test email' },
+      },
+
+      Subject: { Data: 'From: ' + emailFrom },
+    },
+    Source: emailFrom,
+  };
+
+  return ses.sendEmail(params).promise();
+}
 
 const sendEmail = async options => {
   // configure AWS SDK
@@ -26,42 +51,13 @@ const sendEmail = async options => {
 
     await transporter.sendMail(message);
   } else {
-    const SES_CONFIG = {
-      accessKeyId: process.env.SES_ACCESS_USER,
-      secretAccessKey: process.env.SES_SECRET_KEY,
-      region: process.env.SES_REGION,
-    };
-
-    aws.config.update(SES_CONFIG);
-    var ses = new aws.SES();
-
-    // AWS.config.update({ region: process.env.SES_REGION });
-
-    var params = {
-      Destination: {
-        ToAddresses: ['chuckladuck91@gmail.com'],
-      },
-      Message: {
-        Body: {
-          Html: {
-            Charset: 'UTF-8',
-            Data: 'HTML Testing',
-          },
-          Text: {
-            Charset: 'UTF-8',
-            Data: 'Testing SES email',
-          },
-        },
-        Subject: {
-          Charset: 'UTF-8',
-          Data: 'Test email',
-        },
-      },
-      Source: 'dilt.fcfs@gmail.com',
-      ReplyToAddresses: ['dilt.fcfs@gmail.com'],
-    };
-
-    await AWS_SES.sendEmail(params).promise();
+    sesTest('chuckladuck91@gmail.com', process.env.SES_FROM_EMAIL)
+      .then(val => {
+        console.log('got this back', val);
+      })
+      .catch(err => {
+        console.log('There was an error!', err);
+      });
   }
 };
 
