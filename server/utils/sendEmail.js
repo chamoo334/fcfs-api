@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const AWS = require('aws-sdk');
+const aws = require('aws-sdk');
 
 const sendEmail = async options => {
   // configure AWS SDK
@@ -32,7 +32,8 @@ const sendEmail = async options => {
       region: process.env.SES_REGION,
     };
 
-    const AWS_SES = new AWS.SES(SES_CONFIG);
+    aws.config.update(SES_CONFIG);
+    var ses = new aws.SES();
 
     // AWS.config.update({ region: process.env.SES_REGION });
 
@@ -60,7 +61,7 @@ const sendEmail = async options => {
       ReplyToAddresses: ['dilt.fcfs@gmail.com'],
     };
 
-    await AWS_SES.sendEmail(params);
+    await AWS_SES.sendEmail(params).promise();
   }
 };
 
