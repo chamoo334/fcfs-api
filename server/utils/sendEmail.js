@@ -33,8 +33,6 @@ const sendEmail = async options => {
     // });
     transporter = nodemailer.createTransport({
       host: process.env.SES_HOST,
-      port: 465,
-      secure: true,
       auth: {
         user: process.env.SES_ACCESS_USER,
         pass: process.env.SSS_SECRET_KEY,
