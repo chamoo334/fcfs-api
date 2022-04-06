@@ -49,8 +49,8 @@ const sendEmail = async options => {
           Data: `${options.subject}`,
         },
       },
-      Source: `${process.env.AWS_FROM_EMAIL}`, // SENDER_ADDRESS
-      ReplyToAddresses: [`${process.env.AWS_FROM_EMAIL}`],
+      Source: process.env.AWS_FROM_EMAIL, // SENDER_ADDRESS
+      ReplyToAddresses: [process.env.AWS_FROM_EMAIL],
     };
 
     await sesClient.send(new SendEmailCommand(params));
