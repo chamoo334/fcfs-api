@@ -37,11 +37,11 @@ const sendEmail = async options => {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: 'Test HTML',
+            Data: `${options.message}`,
           },
           Text: {
             Charset: 'UTF-8',
-            Data: 'Test SES Email',
+            Data: `${options.message}`,
           },
         },
         Subject: {
