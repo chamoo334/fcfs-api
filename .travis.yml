@@ -5,20 +5,19 @@ services:
   - docker
 
 # build test images
-before_install:
-  - env | grep -vE "^(PATH=)" > env.list
-  - ls
-  - cat env.list
-  - rm env.list
-  - ls
+# before_install:
 #   - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
 #   - docker build -t $DOCKER_HUB_USER/node-test -f ./server/Dockerfile.dev ./server
 
 # # run test images
-# script:
+script:
+  # - env | grep -vE "^(PATH=)" > env.list
+  - env | grep "TRAVIS_NODE_" > env.list
+  - cat env.list
+  - rm env.list
 #   - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
 #   # - docker run -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage --env-file env.list
-#   # - docker run --env-file .env -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage --env-file <(bash -c 'env | grep <your env data>')
+#   # - docker run --env-file env.list -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage --env-file <(bash -c 'env | grep <your env data>')
 
 # after_success:
 #   # creating images
