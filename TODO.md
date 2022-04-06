@@ -22,10 +22,20 @@
     - [ ] list all parks
       - [ ] list all campgrounds
         - [ ] direct link to campground's page
-- [ ] Dashboard / User Page
-  - [ ] public profile editing
-  - [ ] protected admin features
-  - [ ] provide option to include coordinates when submitting campground
+- [ ] Dashboard
+
+  - [ ] User Page
+    - [ ] public profile editing
+    - [ ] protected admin features
+    - [ ] provide option to include coordinates when submitting campground
+  - [ ] Reducers & Actions
+    - [ ] UPDATE_DETAILS_SUCCESS
+    - [ ] UPDATE_DETAILS_FAIL
+    - [ ] UPDATE_PASSWORD_SUCCESS
+    - [ ] UPDATE_PASSWORD_FAIL
+    - [ ] SUBMIT_CAMPGROUND_SUCCESS
+    - [ ] SUBMIT_CAMPGROUND_FAIL
+
 - [ ] Public Profile Page
 - [ ] All States Page
   - [ ] find within a radius of your current location

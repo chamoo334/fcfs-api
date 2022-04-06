@@ -9,18 +9,15 @@ services:
 #   - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
 #   - docker build -t $DOCKER_HUB_USER/node-test -f ./server/Dockerfile.dev ./server
 
-# # run test images
+# run test images
 script:
-  # - env | grep -vE "^(PATH=)" > env.list
-  # - env | grep "TRAVIS_NODE_" | tr -d "TRAVIS_NODE_" > env.list
+  # - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
   - env | grep 'TRAVIS_NODE_' | sed -r 's/^TRAVIS_NODE_//' > env.list
-  - cat env.list
+  # - docker run --env-file <(bash -c "env | grep 'TRAVIS_NODE_' | sed -r 's/^TRAVIS_NODE_//'") -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage
+  # - docker run --env-file env.list -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage
   - rm env.list
-#   - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
-#   # - docker run -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage --env-file env.list
-#   # - docker run --env-file env.list -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage --env-file <(bash -c 'env | grep <your env data>')
 
-# after_success:
+after_success:
 #   # creating images
 #   - docker build -t $DOCKER_HUB_USER/fcfs-client ./client
 #   - docker build -t $DOCKER_HUB_USER/fcfs-nginx ./nginx
