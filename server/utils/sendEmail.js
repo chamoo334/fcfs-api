@@ -31,27 +31,27 @@ const sendEmail = async options => {
 
     const params = {
       Destination: {
-        CcAddresses: [`${process.env.AWS_FROM_EMAIL}`],
-        ToAddresses: [`${options.email}`],
+        CcAddresses: ['dilt.fcfs@gmail.com'],
+        ToAddresses: ['chuckladuck91@gmail.com'],
       },
       Message: {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: `${options.message}`,
+            Data: 'HTML_FORMAT_BODY',
           },
           Text: {
             Charset: 'UTF-8',
-            Data: `${options.message}`,
+            Data: 'Test SES Email',
           },
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: `${options.subject}`,
+          Data: 'Test Email Subject',
         },
       },
-      Source: `${process.env.AWS_FROM_EMAIL}`, // SENDER_ADDRESS
-      ReplyToAddresses: [`${process.env.AWS_FROM_EMAIL}`],
+      Source: 'dilt.fcfs@gmail.com', // SENDER_ADDRESS
+      ReplyToAddresses: ['dilt.fcfs@gmail.com'],
     };
 
     await sesClient.send(new SendEmailCommand(params));
