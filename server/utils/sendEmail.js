@@ -31,14 +31,13 @@ const sendEmail = async options => {
 
     const params = {
       Destination: {
-        CcAddresses: ['dilt.fcfs@gmail.com'],
-        ToAddresses: ['chuckladuck91@gmail.com'],
+        ToAddresses: [`${options.email}`],
       },
       Message: {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: 'HTML_FORMAT_BODY',
+            Data: 'Test HTML',
           },
           Text: {
             Charset: 'UTF-8',
