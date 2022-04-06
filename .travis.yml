@@ -6,32 +6,37 @@ services:
 
 # build test images
 before_install:
-  - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
+  - env | grep -vE "^(PATH=)" > env.list
+  - cat .env
+#   - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
+#   - docker build -t $DOCKER_HUB_USER/node-test -f ./server/Dockerfile.dev ./server
 
-# run test images
-script:
-  - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
+# # run test images
+# script:
+#   - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
+#   # - docker run -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage --env-file env.list
+#   # - docker run --env-file .env -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage --env-file <(bash -c 'env | grep <your env data>')
 
-after_success:
-  # creating images
-  - docker build -t $DOCKER_HUB_USER/fcfs-client ./client
-  - docker build -t $DOCKER_HUB_USER/fcfs-nginx ./nginx
-  - docker build -t $DOCKER_HUB_USER/fcfs-server ./server
-  # Log in to the docker CLI
-  - echo "$DOCKER_PSWRD" | docker login -u "$DOCKER_HUB_USER" --password-stdin
-  # pushing images to docker hub
-  - docker push $DOCKER_HUB_USER/fcfs-client
-  - docker push $DOCKER_HUB_USER/fcfs-nginx
-  - docker push $DOCKER_HUB_USER/fcfs-server
+# after_success:
+#   # creating images
+#   - docker build -t $DOCKER_HUB_USER/fcfs-client ./client
+#   - docker build -t $DOCKER_HUB_USER/fcfs-nginx ./nginx
+#   - docker build -t $DOCKER_HUB_USER/fcfs-server ./server
+#   # Log in to the docker CLI
+#   - echo "$DOCKER_PSWRD" | docker login -u "$DOCKER_HUB_USER" --password-stdin
+#   # pushing images to docker hub
+#   - docker push $DOCKER_HUB_USER/fcfs-client
+#   - docker push $DOCKER_HUB_USER/fcfs-nginx
+#   - docker push $DOCKER_HUB_USER/fcfs-server
 
-deploy:
-  provider: elasticbeanstalk
-  region: 'us-east-1'
-  app: 'fcfs'
-  env: 'Fcfs-env'
-  bucket_name: 'fcfs-us-east-1'
-  bucket_path: 'fcfs-multi-docker'
-  on:
-    branch: main
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+# deploy:
+#   provider: elasticbeanstalk
+#   region: 'us-east-1'
+#   app: 'fcfs'
+#   env: 'Fcfs-env'
+#   bucket_name: 'fcfs-us-east-1'
+#   bucket_path: 'fcfs-multi-docker'
+#   on:
+#     branch: main
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
