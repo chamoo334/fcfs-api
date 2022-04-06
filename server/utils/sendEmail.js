@@ -46,7 +46,7 @@ const sendEmail = async options => {
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: `${options.message}`,
+          Data: `${options.subject}`,
         },
       },
       Source: `${process.env.AWS_FROM_EMAIL}`, // SENDER_ADDRESS
