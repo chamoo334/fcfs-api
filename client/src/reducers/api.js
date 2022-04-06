@@ -4,8 +4,8 @@ const initialState = {
   cur_api_vers: CURRENT_API_VERSION,
 };
 
-export default function (state = initialState, action) {
-  const { type, payload } = action;
+export default function api_reduc(state = initialState, action) {
+  const { type } = action;
   switch (type) {
     default:
       return state;

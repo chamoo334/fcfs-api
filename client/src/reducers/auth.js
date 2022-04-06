@@ -18,7 +18,7 @@ const initialState = {
   user: null,
 };
 
-export default function (state = initialState, action) {
+export default function auth_reduc(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case REGISTER_SUCCESS:

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Markdown from 'markdown-to-jsx';
-import { render } from 'react-dom';
 
 const Apiv1 = () => {
   const v1 = 'V1.md';
