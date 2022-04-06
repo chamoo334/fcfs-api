@@ -7,7 +7,7 @@ services:
 # build test images
 before_install:
   - env | grep -vE "^(PATH=)" > env.list
-  - cat .env
+  - cat env.list
 #   - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
 #   - docker build -t $DOCKER_HUB_USER/node-test -f ./server/Dockerfile.dev ./server
 
