@@ -26,32 +26,32 @@ const sendEmail = async options => {
 
     await transporter.sendMail(message);
   } else {
-    const REGION = process.env.AWS_FROM_EMAIL;
+    const REGION = 'us-east-1';
     const sesClient = new SESClient({ region: REGION });
 
     const params = {
       Destination: {
-        CcAddresses: [process.env.AWS_FROM_EMAIL],
-        ToAddresses: [options.email],
+        CcAddresses: [`${process.env.AWS_FROM_EMAIL}`],
+        ToAddresses: [`${options.email}`],
       },
       Message: {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: options.message,
+            Data: `${options.message}`,
           },
           Text: {
             Charset: 'UTF-8',
-            Data: options.message,
+            Data: `${options.message}`,
           },
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: options.subject,
+          Data: `${options.subject}`,
         },
       },
-      Source: process.env.AWS_FROM_EMAIL, // SENDER_ADDRESS
-      ReplyToAddresses: [process.env.AWS_FROM_EMAIL,
+      Source: `${process.env.AWS_FROM_EMAIL}`, // SENDER_ADDRESS
+      ReplyToAddresses: [`${process.env.AWS_FROM_EMAIL}`],
     };
 
     await sesClient.send(new SendEmailCommand(params));
