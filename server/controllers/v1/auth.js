@@ -19,11 +19,15 @@ exports.authRegister = asyncHandler(async (req, res, next) => {
 
   const confirmEmailToken = user.generateEmailConfirmToken();
 
-  // const confirmEmailURL = `${req.protocol}://${req.get(
-  //   'host'
-  // )}/confirmemail?token=${confirmEmailToken}`;
-
-  const confirmEmailURL = `${req.protocol}://localhost:3000/confirmemail?token=${confirmEmailToken}`;
+  let confirmEmailURL;
+  if (process.env.NODE_ENV === 'development') {
+    // confirmEmailURL = `${req.protocol}://${req.get(
+    //   'host'
+    // )}/confirmemail?token=${confirmEmailToken}`;
+    confirmEmailURL = `${req.protocol}://localhost:3000/confirmemail?token=${confirmEmailToken}`;
+  } else {
+    confirmEmailURL = `https://www.fcfs.link/confirmemail?token=${confirmEmailToken}`;
+  }
 
   const message = `You are receiving this email because you need to confirm your email address. Please make a GET request to: \n\n ${confirmEmailURL}`;
 
@@ -143,9 +147,14 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // email user resetURL
-  const resetUrl = `${req.protocol}://${req.get(
-    'host'
-  )}/resetpassword/${resetToken}`;
+  let resetUrl;
+  if (process.env.NODE_ENV === 'development') {
+    resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/resetpassword/${resetToken}`;
+  } else {
+    resetUrl = `https://www.fcfs.link/resetpassword/${resetToken}`;
+  }
 
   const message = `You are receiving this email because you (or someone else) has 
     requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
