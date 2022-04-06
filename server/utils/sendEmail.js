@@ -26,7 +26,7 @@ const sendEmail = async options => {
 
     await transporter.sendMail(message);
   } else {
-    const REGION = `${process.env.AWS_REGION}`;
+    const REGION = 'us-east-1';
     const sesClient = new SESClient({ region: REGION });
 
     const params = {
