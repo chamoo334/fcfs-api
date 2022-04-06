@@ -12,7 +12,8 @@ services:
 # # run test images
 script:
   # - env | grep -vE "^(PATH=)" > env.list
-  - env | grep "TRAVIS_NODE_" > env.list
+  # - env | grep "TRAVIS_NODE_" | tr -d "TRAVIS_NODE_" > env.list
+  - env | grep 'TRAVIS_NODE_' | sed -r 's/^TRAVIS_NODE_//' > env.list
   - cat env.list
   - rm env.list
 #   - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
