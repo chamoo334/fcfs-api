@@ -26,37 +26,32 @@ const sendEmail = async options => {
 
     await transporter.sendMail(message);
   } else {
-    const REGION = 'us-east-1';
+    const REGION = process.env.AWS_FROM_EMAIL;
     const sesClient = new SESClient({ region: REGION });
-    // const client = new SESClient({
-    //   accessKeyId: process.env.SES_ACCESS_USER,
-    //   secretAccessKey: process.env.SES_SECRET_KEY,
-    //   region: process.env.SES_REGION,
-    // });
 
     const params = {
       Destination: {
-        CcAddresses: ['dilt.fcfs@gmail.com'],
-        ToAddresses: ['chuckladuck91@gmail.com'],
+        CcAddresses: [process.env.AWS_FROM_EMAIL],
+        ToAddresses: [options.email],
       },
       Message: {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: 'HTML_FORMAT_BODY',
+            Data: options.message,
           },
           Text: {
             Charset: 'UTF-8',
-            Data: 'Test SES Email',
+            Data: options.message,
           },
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: 'Test Email Subject',
+          Data: options.subject,
         },
       },
-      Source: 'dilt.fcfs@gmail.com', // SENDER_ADDRESS
-      ReplyToAddresses: ['dilt.fcfs@gmail.com'],
+      Source: process.env.AWS_FROM_EMAIL, // SENDER_ADDRESS
+      ReplyToAddresses: [process.env.AWS_FROM_EMAIL,
     };
 
     await sesClient.send(new SendEmailCommand(params));

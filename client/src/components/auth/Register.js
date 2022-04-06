@@ -38,10 +38,13 @@ const Register = () => {
     <Fragment>
       <section className='container'>
         <h1 className='large text-primary'>Sign Up</h1>
-        <h3>
-          Notice: FCFS is currently under development and registration is by
-          invite only. Please email dilt.fcfs@gmail.com for an invite.
-        </h3>
+        <p>
+          <h3>
+            Notice: FCFS is currently under development and registration is by
+            invite only. Please email dilt.fcfs@gmail.com for assistance with
+            obtaining an account.
+          </h3>
+        </p>
         <p className='lead'>
           <i className='fas fa-user'></i>Create Your Account
         </p>
