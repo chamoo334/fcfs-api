@@ -4,9 +4,6 @@ language: generic
 services:
   - docker
 
-env:
-  - TRAVIS_TAG=1.0
-
 # build test images
 before_install:
   # - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
