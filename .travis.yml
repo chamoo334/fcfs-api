@@ -34,8 +34,6 @@ after_success:
 #   - docker push $DOCKER_HUB_USER/fcfs-server
 
 deploy:
-  on:
-    branch: main
   - if [ $TRAVIS_PULL_REQUEST == "false" ]; then
     echo "not a pull request deploy";
     fi
@@ -45,6 +43,8 @@ deploy:
 #   env: 'Fcfs-env'
 #   bucket_name: 'fcfs-us-east-1'
 #   bucket_path: 'fcfs-multi-docker'
+  on:
+    branch: main
 #   access_key_id: $AWS_ACCESS_KEY
 #   secret_access_key: $AWS_SECRET_KEY
 
