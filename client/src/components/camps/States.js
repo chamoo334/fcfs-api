@@ -12,7 +12,7 @@ const States = () => {
         </i>
       </p>
       <div className='state'>
-        <div>
+        <div role='state-div'>
           <MapChart />
         </div>
       </div>
