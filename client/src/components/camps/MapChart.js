@@ -63,7 +63,7 @@ const MapChart = () => {
 
   const Results = () => {
     return (
-      <div className='state-park bg-light'>
+      <div role='parks-list' className='state-park bg-light'>
         <h2>{clickedState}</h2>
         <ul>
           {parksData.map(park => (

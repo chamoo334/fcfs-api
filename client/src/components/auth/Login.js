@@ -38,7 +38,7 @@ const Login = () => {
         <p className='lead'>
           <i className='fas fa-user'></i> Sign into your account
         </p>
-        <form onSubmit={onSubmit} className='form'>
+        <form onSubmit={onSubmit} className='form' aria-label='form'>
           <div className='form-group'>
             <input
               type='text'

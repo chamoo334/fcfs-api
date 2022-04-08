@@ -25,7 +25,7 @@ const Park = () => {
   const Campgrounds = () => {
     return (
       <div className='campgrounds'>
-        <ul>
+        <ul role='campground-list'>
           {camps.map(camp => (
             <div key={camp.slug} className='campground bg-light'>
               <img

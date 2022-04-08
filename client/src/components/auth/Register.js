@@ -38,18 +38,18 @@ const Register = () => {
     <Fragment>
       <section className='container'>
         <h1 className='large text-primary'>Sign Up</h1>
-        <p>
-          <h3>
+        <h3>
+          <p>
             Notice: FCFS is currently under development and registration is by
             invite only. Please email dilt.fcfs@gmail.com for assistance with
-            obtaining an account.
-          </h3>
-        </p>
+            obtaining an account. <br></br> <br></br>
+          </p>
+        </h3>
         <p className='lead'>
-          <i className='fas fa-user'></i>Create Your Account
+          <i className='fas fa-user'></i> Create Your Account
         </p>
 
-        <form onSubmit={onSubmit} className='form'>
+        <form onSubmit={onSubmit} className='form' aria-label='form'>
           <div className='form-group'>
             <input
               type='text'

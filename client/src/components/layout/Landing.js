@@ -25,9 +25,9 @@ const Landing = () => {
   );
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  if (isAuthenticated) {
-    return <Navigate to='/dashboard' />;
-  }
+  // if (isAuthenticated) {
+  //   return <Navigate to='/dashboard' />;
+  // }
 
   return (
     <section className='landing'>
