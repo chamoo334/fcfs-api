@@ -6,17 +6,22 @@ services:
 
 # build test images
 before_install:
-  - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
+  # - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
 #   - docker build -t $DOCKER_HUB_USER/node-test -f ./server/Dockerfile.dev ./server
 
 # run test images
 script:
-  - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
-  # - env | grep 'TRAVIS_NODE_' | sed -r 's/^TRAVIS_NODE_//' > env.list
-  # - docker run --env-file <(bash -c "env | grep 'TRAVIS_NODE_' | sed -r 's/^TRAVIS_NODE_//'") -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage
-  # - docker run --env-file env.list -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage
-  # - rm env.list
-# after_success:
+  - if [ $TRAVIS_PULL_REQUEST == "false" ]; then
+    echo "not a pull request"
+    fi
+
+    # - docker run -e CI=true $DOCKER_HUB_USER/react-test npm run test -- --coverage
+    # - env | grep 'TRAVIS_NODE_' | sed -r 's/^TRAVIS_NODE_//' > env.list
+    # - docker run --env-file <(bash -c "env | grep 'TRAVIS_NODE_' | sed -r 's/^TRAVIS_NODE_//'") -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage
+    # - docker run --env-file env.list -e CI=true $DOCKER_HUB_USER/node-test npm run test -- --coverage
+    # - rm env.list
+
+after_success:
 #   # creating images
 #   - docker build -t $DOCKER_HUB_USER/fcfs-client ./client
 #   - docker build -t $DOCKER_HUB_USER/fcfs-nginx ./nginx
