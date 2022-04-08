@@ -4,6 +4,9 @@ language: generic
 services:
   - docker
 
+env:
+  - TRAVIS_TAG=1.0
+
 # build test images
 before_install:
   # - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
@@ -34,6 +37,9 @@ after_success:
 #   - docker push $DOCKER_HUB_USER/fcfs-server
 
 deploy:
+  on:
+    branch: main
+  tags: true
   - if [ $TRAVIS_PULL_REQUEST == "false" ]; then
     echo "not a pull request deploy";
     fi
@@ -43,8 +49,6 @@ deploy:
 #   env: 'Fcfs-env'
 #   bucket_name: 'fcfs-us-east-1'
 #   bucket_path: 'fcfs-multi-docker'
-#   on:
-#     branch: main
 #   access_key_id: $AWS_ACCESS_KEY
 #   secret_access_key: $AWS_SECRET_KEY
 
