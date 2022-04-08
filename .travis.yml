@@ -36,7 +36,6 @@ after_success:
 deploy:
   on:
     branch: main
-  tags: true
   - if [ $TRAVIS_PULL_REQUEST == "false" ]; then
     echo "not a pull request deploy";
     fi
