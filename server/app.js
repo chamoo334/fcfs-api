@@ -1,7 +1,7 @@
 const v1Campgrounds = require('./routes/v1/campgrounds');
 const v1Auth = require('./routes/v1/auth');
 const v1Users = require('./routes/v1/users');
-const { connectDB } = require('./config/db');
+// const { connectDB } = require('./config/db');
 const errHandler = require('./middleware/error');
 const { cleanInput } = require('./middleware/xssCleanIn');
 const express = require('express');
@@ -15,9 +15,6 @@ const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors'); //TODO: consider options for users and auth
 const path = require('path');
-
-// load env & connect database
-connectDB();
 
 const app = express();
 app.use(express.json());
