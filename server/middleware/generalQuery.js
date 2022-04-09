@@ -110,7 +110,7 @@ exports.advanceQuery =
     const results = await query;
 
     let response = {
-      sucess: true,
+      success: true,
       count: results.length,
       data: results,
     };
