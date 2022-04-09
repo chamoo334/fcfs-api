@@ -1,6 +1,5 @@
 import request from 'supertest';
 import app from './app.js';
-const { conn } = require('./config/db');
 
 describe('API (/v1) Open Endpoints Get Requests', () => {
   describe('/campgrounds successful response', () => {
