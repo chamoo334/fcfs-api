@@ -1,9 +1,13 @@
 # First Come First Serve API V1
-## Endpoints associated with FCFS API.
+
+Community website can be found [here](https://www.fcfs.link/).
+
+## API endpoint: https://www.fcfs.link/api/v1
 
 _Notes:<br> - all URL parameters are lowercase with - replacing all spaces. <br> - state parameters are the requested state's 2 letter indentifier_
 
 - [First Come First Serve API V1](#first-come-first-serve-api-v1)
+  - [API endpoint: https://www.fcfs.link/api/v1](#api-endpoint-httpswwwfcfslinkapiv1)
   - [Open Endpoints](#open-endpoints)
     - [1. Get All Campgrounds](#1-get-all-campgrounds)
     - [2. Get Campgrounds Within a Radius](#2-get-campgrounds-within-a-radius)
