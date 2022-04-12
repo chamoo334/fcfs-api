@@ -18,9 +18,9 @@
   - [Community Website](#community-website)
     - [Purpose:](#purpose)
     - [Development](#development)
-      - [1. Project Details](/fcfs/PROJECT-README.md)
-        - [1. Frontend Notes](/fcfs/client/FRONTEND-README.md)
-        - [2. Backend Notes](/fcfs/server/BACKEND-README.md)
+      - [1. Project Details](https://github.com/chamoo334/fcfs-api/tree/main/fcfs)
+        - [1. Frontend Notes](https://github.com/chamoo334/fcfs-api/tree/main/fcfs/client)
+        - [2. Backend Notes](https://github.com/chamoo334/fcfs-api/tree/main/fcfs/server)
       - [2. Sass Styling](https://github.com/chamoo334/fcfs-api/tree/main/dev_docs/api_theme_docs)
 
 ## API: https://www.fcfs.link/api/v1
@@ -697,5 +697,5 @@ Community website can be found [here](https://www.fcfs.link/).
 
 ### Development:
 
-- [General Project Summary](/fcfs/PROJECT-README.md)
+- [General Project Summary](https://github.com/chamoo334/fcfs-api/tree/main/fcfs)
 - [SASS Styling](https://github.com/chamoo334/fcfs-api/dev_docs/api_theme_docs)
