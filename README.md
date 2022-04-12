@@ -1,32 +1,37 @@
-# First Come First Serve API V1
+# ![First Come First Serve](git_img/fcfs-logo-temp.png)
 
-Community website can be found [here](https://www.fcfs.link/).
+- [!First Come First Serve](#)
+  - [API: https://www.fcfs.link/api/v1](#api-httpswwwfcfslinkapiv1)
+    - [Open Endpoints](#open-endpoints)
+      - [1. Get All Campgrounds](#1-get-all-campgrounds)
+      - [2. Get Campgrounds Within a Radius](#2-get-campgrounds-within-a-radius)
+      - [3. Get Campgrounds By State](#3-get-campgrounds-by-state)
+      - [4. Get Campgrounds By Park](#4-get-campgrounds-by-park)
+      - [5. Get A Single Campground](#5-get-a-single-campground)
+      - [6. Login](#6-login)
+    - [Closed Endpoints](#closed-endpoints)
+      - [1. Add Campground](#1-add-campground)
+      - [2. Edit Campground](#2-edit-campground)
+      - [3. Up Vote Campground](#3-up-vote-campground)
+      - [4. Down Vote Campground](#4-down-vote-campground)
+      - [5. Logout User](#5-logout-user)
+  - [Community Website](#community-website)
+    - [Purpose:](#purpose)
+    - [Development](#development)
+      - [1. Project Details](/fcfs/PROJECT-README.md)
+        - [1. Frontend Notes](/fcfs/client/FRONTEND-README.md)
+        - [2. Backend Notes](/fcfs/server/BACKEND-README.md)
+      - [2. Sass Styling](https://github.com/chamoo334/fcfs-api/dev_docs/api_theme_docs)
 
-## API endpoint: https://www.fcfs.link/api/v1
+## API: https://www.fcfs.link/api/v1
 
 _Notes:<br> - all URL parameters are lowercase with - replacing all spaces. <br> - state parameters are the requested state's 2 letter indentifier_
 
-- [First Come First Serve API V1](#first-come-first-serve-api-v1)
-  - [API endpoint: https://www.fcfs.link/api/v1](#api-endpoint-httpswwwfcfslinkapiv1)
-  - [Open Endpoints](#open-endpoints)
-    - [1. Get All Campgrounds](#1-get-all-campgrounds)
-    - [2. Get Campgrounds Within a Radius](#2-get-campgrounds-within-a-radius)
-    - [3. Get Campgrounds By State](#3-get-campgrounds-by-state)
-    - [4. Get Campgrounds By Park](#4-get-campgrounds-by-park)
-    - [5. Get A Single Campground](#5-get-a-single-campground)
-    - [6. Login](#6-login)
-  - [Closed Endpoints](#closed-endpoints)
-    - [1. Add Campground](#1-add-campground)
-    - [2. Edit Campground](#2-edit-campground)
-    - [3. Up Vote Campground](#3-up-vote-campground)
-    - [4. Down Vote Campground](#4-down-vote-campground)
-    - [5. Logout User](#5-logout-user)
-
-## Open Endpoints
+### Open Endpoints
 
 Open endpoints require no Authentication. Used to fetch campground data.
 
-### 1. Get All Campgrounds
+#### 1. Get All Campgrounds
 
 Fetch all campgrounds.
 
@@ -101,7 +106,7 @@ Code: `200 OK`
 }
 ```
 
-### 2. Get Campgrounds Within a Radius
+#### 2. Get Campgrounds Within a Radius
 
 Fetch all campgrounds within a radius from the any zipcode.
 
@@ -152,7 +157,7 @@ Code: `200 OK`
 }
 ```
 
-### 3. Get Campgrounds By State
+#### 3. Get Campgrounds By State
 
 Fetch all campgrounds within a specific state.
 
@@ -202,7 +207,7 @@ Code: `200 OK`
 }
 ```
 
-### 4. Get Campgrounds By Park
+#### 4. Get Campgrounds By Park
 
 Fetch all campgrounds within a specific park.
 
@@ -252,7 +257,7 @@ Code: `200 OK`
 }
 ```
 
-### 5. Get A Single Campground
+#### 5. Get A Single Campground
 
 Fetch a specific campground.
 
@@ -302,7 +307,7 @@ Code: `200 OK`
 }
 ```
 
-### 6. Login
+#### 6. Login
 
 Successful login provides the user with a token for use with protected routes. All fields are required.
 
@@ -346,12 +351,12 @@ Code: `401 Unauthorized`
 }
 ```
 
-## Closed Endpoints
+### Closed Endpoints
 
 Require a valid token to be included in the header of the
 request. A token can be acquired from via [Login](#6-login).
 
-### 1. Add Campground
+#### 1. Add Campground
 
 Allows registered users to add a campground. All fields are required except 'vote'. Should a user want to vote, use 1 or -1 to indicate positive or negative review.
 
@@ -442,7 +447,7 @@ Content Example:
 }
 ```
 
-### 2. Edit Campground
+#### 2. Edit Campground
 
 Allows registered contributors to edit an existing campground.
 
@@ -527,7 +532,7 @@ Code: `401 Unauthorized`
 }
 ```
 
-### 3. Up Vote Campground
+#### 3. Up Vote Campground
 
 Provide a positive review of a campground.
 
@@ -589,7 +594,7 @@ Code: `401 Unauthorized`
 }
 ```
 
-### 4. Down Vote Campground
+#### 4. Down Vote Campground
 
 Provide a negative review of a campground.
 
@@ -651,7 +656,7 @@ Code: `401 Unauthorized`
 }
 ```
 
-### 5. Logout User
+#### 5. Logout User
 
 Removes active cookie associated with the user's account.
 
@@ -681,3 +686,16 @@ Code: `401 Unauthorized`
 ```
 
 [Back to top](#fcfs-api)
+
+## Community Website
+
+### Purpose:
+
+FCFS was created to facilitate the collection and organization of campgrounds that do not accept reservations. In addition to promoting community driven data collection, the API ws created to assist with making the data easily available for use within any other application.
+
+Community website can be found [here](https://www.fcfs.link/).
+
+### Development:
+
+- [General Project Summary](/fcfs/PROJECT-README.md)
+- [SASS Styling](https://github.com/chamoo334/fcfs-api/dev_docs/api_theme_docs)

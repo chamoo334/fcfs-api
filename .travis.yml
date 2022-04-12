@@ -6,8 +6,8 @@ services:
 
 # build test images
 before_install:
-  - docker build -t $DOCKER_HUB_USER/react-test -f ./client/Dockerfile.dev ./client
-  - docker build -t $DOCKER_HUB_USER/node-test -f ./server/Dockerfile.dev ./server
+  - docker build -t $DOCKER_HUB_USER/react-test -f ./fcfs/client/Dockerfile.dev ./fcfs/client
+  - docker build -t $DOCKER_HUB_USER/node-test -f ./fcfs/server/Dockerfile.dev ./fcfs/server
 
 # run test images
 script:
@@ -18,9 +18,9 @@ script:
 
 after_success:
   # creating images
-  - docker build -t $DOCKER_HUB_USER/fcfs-client ./client
-  - docker build -t $DOCKER_HUB_USER/fcfs-nginx ./nginx
-  - docker build -t $DOCKER_HUB_USER/fcfs-server ./server
+  - docker build -t $DOCKER_HUB_USER/fcfs-client ./fcfs/client
+  - docker build -t $DOCKER_HUB_USER/fcfs-nginx ./fcfs/nginx
+  - docker build -t $DOCKER_HUB_USER/fcfs-server ./fcfs/server
   # Log in to the docker CLI
   - echo "$DOCKER_PSWRD" | docker login -u "$DOCKER_HUB_USER" --password-stdin
   # pushing images to docker hub
