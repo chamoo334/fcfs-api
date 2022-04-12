@@ -21,7 +21,7 @@
       - [1. Project Details](/fcfs/PROJECT-README.md)
         - [1. Frontend Notes](/fcfs/client/FRONTEND-README.md)
         - [2. Backend Notes](/fcfs/server/BACKEND-README.md)
-      - [2. Sass Styling](https://github.com/chamoo334/fcfs-api/dev_docs/api_theme_docs)
+      - [2. Sass Styling](https://github.com/chamoo334/fcfs-api/tree/main/dev_docs/api_theme_docs)
 
 ## API: https://www.fcfs.link/api/v1
 
