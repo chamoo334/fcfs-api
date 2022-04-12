@@ -6,5 +6,5 @@ Express is the backbone of the REST API implented using MERN stack. Mongoose lib
 
 ## General Structure
 
-- [Frontend Notes](../client/FRONTEND-README.md)
-- [Backend Notes](../server/BACKEND-README.md)
+- [Frontend Notes](https://github.com/chamoo334/fcfs-api/tree/main/fcfs/client)
+- [Backend Notes](https://github.com/chamoo334/fcfs-api/tree/main/fcfs/server)

@@ -116,6 +116,6 @@
 <summary> ERD</summary>
 
 The image below represents the structure of data as received by a user.
-![Received Data ERD](../git_img/erd-received-data.png)
+![Received Data ERD](../../git_img/erd-received-data.png)
 
 </details>
