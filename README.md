@@ -685,8 +685,6 @@ Code: `401 Unauthorized`
 }
 ```
 
-[Back to top](#fcfs-api)
-
 ## Community Website
 
 ### Purpose:
@@ -699,3 +697,5 @@ Community website can be found [here](https://www.fcfs.link/).
 
 - [General Project Summary](https://github.com/chamoo334/fcfs-api/tree/main/fcfs)
 - [SASS Styling](https://github.com/chamoo334/fcfs-api/dev_docs/api_theme_docs)
+
+[Back to top](#fcfs-api)
