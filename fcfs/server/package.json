@@ -1,7 +1,7 @@
 {
   "name": "fcfs-api",
   "version": "1.0.0",
-  "description": "Basic website and api for first come first serve",
+  "description": "Basic website and api for first come first served",
   "main": "server.js",
   "engines": {
     "node": ">=16.14.0"

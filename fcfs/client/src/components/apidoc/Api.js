@@ -16,7 +16,7 @@ const Api = () => {
   const Header = () => {
     return (
       <div>
-        <h1>First Come First Serve API</h1>
+        <h1>First Come First Served API</h1>
         <p>Endpoints associated with FCFS API</p>
       </div>
     );

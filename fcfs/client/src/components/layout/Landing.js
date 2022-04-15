@@ -33,7 +33,7 @@ const Landing = () => {
     <section className='landing'>
       <div className='dark-overlay'>
         <div className='landing-inner'>
-          <h1 className='x-large'>First Come First Serve API & Community</h1>
+          <h1 className='x-large'>First Come First Served API & Community</h1>
           <p className='lead'>
             Community driven collection of campgrounds that do not accept
             reservations. Join to contribute campground data, reviews, and tips

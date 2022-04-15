@@ -1,6 +1,6 @@
-# ![First Come First Serve](git_img/fcfs-logo-temp.png)
+# ![First Come First Served](git_img/fcfs-logo-temp.png)
 
-- [!First Come First Serve](#)
+- [!First Come First Served](#)
   - [API: https://www.fcfs.link/api/v1](#api-httpswwwfcfslinkapiv1)
     - [Open Endpoints](#open-endpoints)
       - [1. Get All Campgrounds](#1-get-all-campgrounds)

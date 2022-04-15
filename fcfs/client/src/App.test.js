@@ -65,8 +65,8 @@ function renderWithRedux(
 
 it('initial rendering on Landing', () => {
   render(<App />);
-  // const FCFStext = screen.getByText(/First Come First Serve API & Community/);
+  // const FCFStext = screen.getByText(/First Come First Served API & Community/);
   expect(
-    screen.getByText(/First Come First Serve API & Community/)
+    screen.getByText(/First Come First Served API & Community/)
   ).toBeInTheDocument();
 });
